@@ -6,6 +6,7 @@ Reference material skills read. Not standards (not binding) and not skills (no p
 |------|----------|---------|
 | [`packages-2026.md`](packages-2026.md) | Vetted free/OSS/commercial-use packages by problem, with licences | `flutter-stack`, `flutter-router`, `flutter-security` |
 | [`flutter-cli.md`](flutter-cli.md) | Flutter and Dart commands, what output means, how to read failures | `flutter-doctor`, every executing skill |
+| [`ui-craft.md`](ui-craft.md) | Visual-quality rules distilled with sources: spacing, hierarchy, colour, states, motion, clarity | `flutter-scaffold`, `flutter-implementation`, `flutter-verify`, FLS-13 |
 
 ---
 
@@ -28,5 +29,8 @@ These files deliberately omit version numbers for the same reason — a document
 | [pub.dev](https://pub.dev) | **The** source for versions, licences, platform support and maintenance |
 | [Flutter performance docs](https://docs.flutter.dev/perf) | Profiling methodology |
 | [Material Design](https://m3.material.io) | Component and interaction guidance |
+| [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/) | iOS layout, typography and colour guidance |
+| [Laws of UX](https://lawsofux.com/) | The psychology laws behind clarity rules (Fitts, Hick, Jakob, Miller) |
+| [Nielsen Norman Group](https://www.nngroup.com/articles/ten-usability-heuristics/) | Usability heuristics, error-message and skeleton-screen guidelines |
 | [WCAG 2.2](https://www.w3.org/TR/WCAG22/) | Accessibility criteria behind the a11y standard |
 | [OWASP MASVS](https://mas.owasp.org) | Mobile security verification standard behind the security standard |

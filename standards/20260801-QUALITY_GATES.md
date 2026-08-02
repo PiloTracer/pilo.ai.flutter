@@ -54,7 +54,7 @@ G1, plus:
 
 ## 4. G3 — Milestone gate
 
-G2, plus the fourteen dimensions of `@flutter-verify milestone`:
+G2, plus the fifteen dimensions of `@flutter-verify milestone`:
 
 | # | Dimension | Pass condition |
 |---|-----------|----------------|
@@ -72,6 +72,7 @@ G2, plus the fourteen dimensions of `@flutter-verify milestone`:
 | 12 | Accessibility | `@flutter-a11y audit` on changed P0 screens (FLS-10) |
 | 13 | Performance | NFR budgets held where an NFR applies (FLS-01, FLS-08) |
 | 14 | AI-assisted change safety | FLS-06 run; blast radius and unverified claims recorded |
+| 15 | Visual craft | UI_CRAFT_STANDARD held on changed screens; FLS-13 run (spacing, hierarchy, accent, states) |
 
 **Verdicts:** `pass` (no blockers, no majors) · `pass with gaps` (majors, each with a recorded owner and disposition) · `fail` (any blocker). Only `pass` and `pass with gaps` allow completion.
 

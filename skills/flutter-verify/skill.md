@@ -2,7 +2,7 @@
 name: flutter-verify
 description: >-
   Verify Flutter code against the plan, the SPECs and the project standards.
-  Four scopes - milestone (the 14-dimension audit), uncommitted (pre-commit
+  Four scopes - milestone (the 15-dimension audit), uncommitted (pre-commit
   sweep), last (post-commit or post-push audit), and gate (the mechanical
   format/analyze/test/coverage chain). Reports evidence-backed verdicts and
   routes every finding. Use for check the code, verify the milestone, safe to
@@ -32,7 +32,7 @@ The verification authority for the **code** layer. `@flutter-plan-verify` audits
 
 | Mode | Scope | When |
 |------|-------|------|
-| `milestone` | The full iteration: 14 dimensions | Before `@flutter-implementation complete`; before release |
+| `milestone` | The full iteration: 15 dimensions | Before `@flutter-implementation complete`; before release |
 | `milestone - F{N}` | A named milestone | Auditing an earlier milestone |
 | `uncommitted` | The working-tree diff | Pre-commit; auto-invoked at batch end |
 | `last` | The last commit, or the last push if newer | Post-commit review |
@@ -76,7 +76,7 @@ Toolchain missing → every command is `not run (toolchain unavailable)` and the
 
 ---
 
-## milestone protocol (the 14 dimensions)
+## milestone protocol (the 15 dimensions)
 
 The full audit. Each dimension gets `pass` / `pass with gaps` / `fail` / `not run`, with evidence.
 
@@ -96,6 +96,7 @@ The full audit. Each dimension gets `pass` / `pass with gaps` / `fail` / `not ru
 | D12 | **Accessibility** | Semantics on interactive elements; tap targets; contrast; text scale to 200%; `@flutter-a11y audit` on changed screens | on P0 screens |
 | D13 | **Performance** | No unbounded rebuilds; lists virtualised; images bounded; heavy work off the UI isolate; NFR budgets held; FLS-01, FLS-08 | when an NFR applies |
 | D14 | **AI-assisted change safety** | FLS-06 run: blast radius, adjacent-code impact, and what the agent could not verify | yes, for agent sessions |
+| D15 | **Visual craft** | UI_CRAFT_STANDARD: spacing from the theme scale; SPEC §5 dominant element honoured at the ratio; accent on the primary action only; no factory palette (hygiene scan quoted); states executed per §6; FLS-13 run on changed screens | yes, when the milestone touches presentation |
 
 **Blast radius** (part of D10 and D14): `bash scripts/blast-radius-check.sh` — a diff spanning many areas, touching protected surfaces, or exceeding the line threshold is reported as `risk: high` and requires explicit acknowledgement in the report.
 
@@ -180,6 +181,7 @@ Audits the last commit, or the last push when that is newer.
 - Auditing only the diff when the mode is `milestone`.
 - Skipping D3 because the happy path renders correctly.
 - Skipping D14 by self-classifying an agent session as human-only.
+- Skipping D15 because the logic is correct — craft is judged on what renders, not on what compiles.
 - Echoing a discovered secret into the report.
 - Passing D8 on coverage percentage alone while the six states are untested.
 - Producing findings with no routing command.

@@ -29,6 +29,7 @@ Full signal lists. Match on **intent**; the phrases are examples, not a keyword 
 | `verify` | "review my changes" · "verify F3" · "safe to commit?" · "audit the milestone" | `@flutter-verify <mode>` | `@flutter-repair` |
 | `perf` | "scrolling stutters" · "app is slow to start" · "APK too big" · "memory grows" · "profile it" | `@flutter-perf <mode>` | `@flutter-repair repair - from perf` |
 | `a11y` | "screen reader support" · "contrast" · "tap targets too small" · "semantics labels" | `@flutter-a11y audit` | `@flutter-repair repair - from a11y` |
+| `ui-craft` | "the app looks cheap/basic" · "make it look premium" · "polish this screen" · "spacing/hierarchy/accent review" · "UI polish" | `@flutter-concept-run run - FLS-13` | `@flutter-repair repair - from concept` → re-verify (D15) |
 | `security` | "are we leaking secrets" · "store the token safely" · "pin certificates" · "obfuscate the release" · "CVE in a dependency" | `@flutter-security <mode>` | `harden` or `@flutter-repair` |
 | `repair` | "fix what the audit found" · "tests are red" · "make it pass" | `@flutter-repair repair - from <source>` | re-verify (automatic) |
 | `doctor` | "gradle build failed" · "pod install error" · "version solving failed" · "build_runner conflict" · "won't run on my machine" | `@flutter-doctor diagnose` | targeted mode |

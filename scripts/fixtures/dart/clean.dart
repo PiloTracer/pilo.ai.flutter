@@ -15,8 +15,11 @@ class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // Spacing comes from the theme scale (the AppSpacing ThemeExtension in
+    // core/theme/), never from literals — the spacing scan checks exactly this.
+    final spacing = theme.extension<AppSpacing>()!;
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(spacing.md),
       // Sized by the parent list; no intrinsic measurement needed here.
       child: Text(name, style: theme.textTheme.bodyLarge),
     );

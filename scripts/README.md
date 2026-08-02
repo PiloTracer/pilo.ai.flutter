@@ -17,7 +17,7 @@ All are POSIX-ish bash with no dependencies beyond coreutils and git. Nothing he
 | [`gate-verify.sh`](gate-verify.sh) | Tasks marked done carry evidence; one active pointer; FLS-06 present | `@flutter-verify last` |
 | [`touch-scope-verify.sh`](touch-scope-verify.sh) | The diff against the declared task scope | pre-commit, `@flutter-verify` |
 | [`blast-radius-check.sh`](blast-radius-check.sh) | Diff size, area spread, protected surfaces, never-commit paths | pre-commit, `@flutter-verify` |
-| [`dart-hygiene-check.sh`](dart-hygiene-check.sh) | Patterns the analyzer misses: `print`, colour literals, bare catch, secrets | pre-commit, task gate |
+| [`dart-hygiene-check.sh`](dart-hygiene-check.sh) | Patterns the analyzer misses: `print`, colour/spacing/fontSize literals, bare catch, secrets | pre-commit, task gate |
 | [`self-test.sh`](self-test.sh) | The verifiers themselves, against fixtures | CI, `CONTRIBUTING` |
 
 ## Self-test

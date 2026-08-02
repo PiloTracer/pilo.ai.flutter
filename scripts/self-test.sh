@@ -72,6 +72,20 @@ expect_output 'hardcoded credential|colour literal' "blocker-class findings are 
 expect 0 "a directory argument is expanded, not silently ignored" -- \
   bash scripts/dart-hygiene-check.sh "$FIX/dart/nonexistent-dir"
 
+head_ "UI craft scans"
+expect 1 "cheap-ui fixture produces findings" -- \
+  bash scripts/dart-hygiene-check.sh "$FIX/dart/cheap-ui.dart"
+expect_output 'factory palette colour' "Colors.<name> factory palette is caught" -- \
+  bash scripts/dart-hygiene-check.sh "$FIX/dart/cheap-ui.dart"
+expect_output 'raw spacing literal' "raw EdgeInsets/SizedBox literal is caught" -- \
+  bash scripts/dart-hygiene-check.sh "$FIX/dart/cheap-ui.dart"
+expect_output 'fontSize literal' "fontSize literal is caught" -- \
+  bash scripts/dart-hygiene-check.sh "$FIX/dart/cheap-ui.dart"
+# Theme files are where raw values are DEFINED. If the path exemption regresses,
+# every project's token file reports findings and the scans get switched off.
+expect 0 "theme files may define raw values (path exemption)" -- \
+  bash scripts/dart-hygiene-check.sh "$FIX/dart/theme"
+
 head_ "Layer boundaries"
 expect_output 'repository imports another repository' "repo→repo import is caught" -- \
   bash scripts/dart-hygiene-check.sh "$FIX/dart/repositories"

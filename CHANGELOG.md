@@ -8,6 +8,21 @@ All notable changes to Flutter Agent OS. Format follows [Keep a Changelog](https
 
 ## [Unreleased]
 
+### Added — UI craft: teach it, wire it, enforce it (2026-08-02)
+
+The framework verified that apps were *correct*; it never checked whether they *looked* decided. The difference between "correct" and "premium" is mechanical — spacing rhythm, one dominant element per screen, one accent colour — so it is now taught, wired into the gates, and machine-checked.
+
+- **`UI_CRAFT_STANDARD`** (new standard): spacing rhythm from the theme scale (≤3 values per screen, literals are findings), one dominant element per screen at a recorded ratio (default 2.5×), one accent + neutral ramp with the accent on the primary action only, factory palettes forbidden, clarity rules for non-technical users, state-execution quality (skeleton/spinner thresholds, plain-language errors), and the "polish pass" as part of done
+- **FLS-13 `ui-craft`** (new concept): the visual-craft review lens with verdict rules — factory palette, competing accents, or a screen with no recorded dominant element are blockers; "judged from code" is reported `unverified`, never passed
+- **`dart-hygiene-check.sh`** now flags `Colors.<name>` factory constants (BLOCKER), raw `EdgeInsets`/`SizedBox`/`Gap` literals and `fontSize:` literals (MAJOR) outside theme files. Exclusions now apply at **path level** — theme files are where raw values are *defined*, and a check that fires there gets switched off (this also fixes the `Color(0x…)` scan firing inside `color_scheme.dart`)
+- **`@flutter-verify` D15 "Visual craft"** joins the milestone audit (now 15 dimensions), mirrored in `QUALITY_GATES` G3; `FEATURE_SPEC_STANDARD` §5 requires each screen's dominant element and single primary action, because without that decision hierarchy is unverifiable
+- **`@flutter-scaffold`** generates the craft wiring: spacing `ThemeExtension`, neutral ramp + single accent, dominant-element text style
+- **`resources/ui-craft.md`** (new): the evidence base — every rule distilled with its source (Material 3, Apple HIG, Laws of UX, NN/g error/skeleton thresholds, Refactoring UI previews, the Stanford credibility figure cited precisely)
+- Fixtures: new known-bad `cheap-ui.dart` and known-good `theme/app_theme.dart` (guards the path exemption); `clean.dart` re-baselined to consume a spacing token instead of `EdgeInsets.all(16)`, which the new spacing scan correctly forbids
+
+### Fixed — pre-commit hook (2026-08-02)
+- **`hooks/pre-commit` hygiene step exempts `scripts/fixtures/`.** The fixtures are deliberately-broken verifier test data whose gate is `self-test.sh`; without the exemption, any commit touching them blocked on their intended BLOCKERs — the framework could not commit its own fixtures
+
 ### Fixed — framework test-run against OfficeToolCombo (2026-08-02)
 - **`readiness-verify.sh` false FAIL on `L1`-style ledger ids.** Entry rows like `| L1 |` were counted as zero questions; bare integers and a single letter prefix are both accepted
 - **`probe-protocol.md` ledger shape** now matches the machine-checked template (Score + Q&A table), not a divergent Status/Conf sketch

@@ -38,15 +38,26 @@ report() {
   printf '  %-8s %s:%s  %s\n' "$1" "$2" "$3" "$4" >&2
 }
 
+# Theme/token files DEFINE raw values; tests construct fixtures. Both are
+# exempt from the value scans below — at path level, because an exemption that
+# only inspects line content would fire inside the very files where a palette
+# or spacing scale is declared, and a check that fires there gets switched off.
+THEME_PATHS='(^|/)theme/|_theme\.dart|color_scheme|typography\.dart|spacing\.dart|radii\.dart|durations\.dart|(^|/)(test|integration_test)/|_test\.dart'
+
 # scan <severity> <regex> <message> [exclude-regex] [in-comments]
 #
 # Comment-only lines are skipped by default so that a commented-out `print(` is
 # not reported as live code. Scans that deliberately target comments (TODO,
 # ignore directives, commented-out code) must pass `in-comments`, or they find
 # nothing at all.
+#
+# The exclude regex applies at two levels: a file whose PATH matches is skipped
+# entirely (the theme exemptions above), and a matching LINE is skipped
+# individually (e.g. an ignore directive carrying its reason on the same line).
 scan() {
   local sev="$1" re="$2" msg="$3" excl="${4:-}" incomments="${5:-}"
   for f in "${FILES[@]}"; do
+    if [ -n "$excl" ] && printf '%s' "$f" | grep -qE "$excl"; then continue; fi
     while IFS=: read -r line content; do
       [ -z "$line" ] && continue
       if [ -z "$incomments" ]; then
@@ -68,7 +79,21 @@ scan BLOCKER 'debugPrint\(' \
 
 scan BLOCKER 'Color\(0x[0-9a-fA-F]{8}\)' \
      'hardcoded colour literal — colours come from the theme' \
-     '(core/theme/|_theme\.dart|color_scheme)'
+     "$THEME_PATHS"
+
+# UI craft (UI_CRAFT_STANDARD): the values a widget must take from the theme.
+# A `padding: 13` or a `Colors.blue` in a diff is the cheap signal made visible.
+scan BLOCKER 'Colors\.[a-zA-Z]+' \
+     'factory palette colour — colours come from the theme (UI_CRAFT §4)' \
+     "$THEME_PATHS|Colors\.transparent"
+
+scan MAJOR '(EdgeInsets\.(all|only|symmetric|fromLTRB)|SizedBox|Gap)\([^)]*[0-9]' \
+     'raw spacing literal — spacing comes from the theme scale (UI_CRAFT §2)' \
+     "$THEME_PATHS"
+
+scan MAJOR 'fontSize: *[0-9]' \
+     'fontSize literal — text styles come from the TextTheme (UI_CRAFT §3)' \
+     "$THEME_PATHS"
 
 scan MAJOR '// *ignore(_for_file)?:' \
      'analyzer suppression — needs a linked ADR or a reason on the same line' \

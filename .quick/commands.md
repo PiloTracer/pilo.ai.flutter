@@ -84,7 +84,7 @@ Every invocation, by skill. Argument form is `@skill mode - argument`.
 ## Verification
 
 ```
-@flutter-verify milestone                  14-dimension audit
+@flutter-verify milestone                  15-dimension audit
 @flutter-verify uncommitted                pre-commit sweep
 @flutter-verify last                       post-commit check
 @flutter-verify gate                       mechanical chain only

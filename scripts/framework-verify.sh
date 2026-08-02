@@ -109,7 +109,7 @@ head_ "Concepts"
 for c in widget-tree-efficiency state-management-integrity layer-boundary-audit \
          async-error-safety navigation-integrity ai-change-safety platform-parity \
          performance-budget offline-data-integrity accessibility-inclusivity \
-         security-privacy test-integrity; do
+         security-privacy test-integrity ui-craft; do
   [ -f "concepts/$c/prompt.md" ] && pass "concept $c" || fail "concepts/$c/prompt.md missing"
 done
 [ -f concepts/README.md ] && pass "concepts/README.md" || fail "concepts/README.md missing"

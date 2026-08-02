@@ -132,7 +132,7 @@ Generate dated project copies into `{FLUTTER_STANDARDS_ROOT}`, filling every tok
 | `20260801-QUALITY_GATES.md` | `YYYYMMDD-QUALITY_GATES.md` | coverage floor, commands from DOCS_FLUTTER_STACK |
 | `20260801-ARCHITECTURE_STANDARD.md` | `YYYYMMDD-ARCHITECTURE_STANDARD.md` | doc 03 §1–4 |
 
-Generate the domain-specific standards (`PERFORMANCE`, `ACCESSIBILITY`, `SECURITY_PRIVACY`, `DATA_LAYER`, `NAVIGATION`, `THEMING`, `L10N`, `OBSERVABILITY`, `RELEASE`) when doc 02 or doc 03 makes them applicable; record any deliberate omission in doc 03 §8.
+Generate the domain-specific standards (`PERFORMANCE`, `ACCESSIBILITY`, `SECURITY_PRIVACY`, `DATA_LAYER`, `NAVIGATION`, `THEMING`, `UI_CRAFT`, `L10N`, `OBSERVABILITY`, `RELEASE`) when doc 02 or doc 03 makes them applicable; record any deliberate omission in doc 03 §8. `UI_CRAFT` applies to anything that ships screens — omitting it means shipping unverified visual quality.
 
 **Exit criterion:** `grep -r 'REPLACE:' {FLUTTER_STANDARDS_ROOT}` returns nothing.
 

@@ -2,7 +2,7 @@
 
 > **Template.** Copied to `{FLUTTER_STANDARDS_ROOT}/YYYYMMDD-THEMING_STANDARD.md`. If UI Design OS (`.ai.ui`) is installed, **its design tokens are the source** and this file records the Flutter binding only — see [`COHABITATION.md`](../COHABITATION.md).
 
-**Pairs with:** [`ACCESSIBILITY_STANDARD`](20260801-ACCESSIBILITY_STANDARD.md) (contrast is a theme-level property), [`L10N_STANDARD`](20260801-L10N_STANDARD.md).
+**Pairs with:** [`ACCESSIBILITY_STANDARD`](20260801-ACCESSIBILITY_STANDARD.md) (contrast is a theme-level property), [`L10N_STANDARD`](20260801-L10N_STANDARD.md), [`UI_CRAFT_STANDARD`](20260802-UI_CRAFT_STANDARD.md) (how the tokens are consumed on screens).
 
 ---
 
@@ -66,7 +66,7 @@ Anything Material's `ThemeData` does not model — spacing, custom semantic colo
 
 ## 6. Spacing, radius, elevation
 
-- A single spacing scale (`REPLACE:SPACING_SCALE`, e.g. 4/8/12/16/24/32/48). Values off the scale need a reason.
+- A single spacing scale (`REPLACE:SPACING_SCALE`, default 4/8/16/24/32 — multiples of 4, so every combination lands on the same grid). Values off the scale need a reason; a raw numeric literal in a widget is a hygiene finding ([`UI_CRAFT_STANDARD`](20260802-UI_CRAFT_STANDARD.md) §2).
 - A radius scale, not per-widget guesses.
 - Elevation is semantic (surface level), not a raw number per widget.
 

@@ -1,13 +1,13 @@
 ---
 name: flutter-concept-run
 description: >-
-  Run the FLS-01 to FLS-12 concept prompts - focused, reusable review lenses for
+  Run the FLS-01 to FLS-13 concept prompts - focused, reusable review lenses for
   widget-tree efficiency, state management, layer boundaries, async and error
   safety, navigation, AI-assisted change safety, platform parity, performance,
-  offline data integrity, accessibility, security, and test integrity. Selects
-  the concepts a diff actually triggers, runs them against real evidence, and
-  attaches the output to the iteration, SPEC or PR. Use for run FLS-06,
-  architecture check, or which concepts apply to my change.
+  offline data integrity, accessibility, security, test integrity, and UI craft.
+  Selects the concepts a diff actually triggers, runs them against real
+  evidence, and attaches the output to the iteration, SPEC or PR. Use for run
+  FLS-06, architecture check, or which concepts apply to my change.
 ---
 
 # flutter-concept-run
@@ -36,7 +36,7 @@ A concept is a **review lens**: one narrow question asked well, repeatedly, with
 
 | Mode | Action |
 |------|--------|
-| `list` | Show the twelve concepts, their triggers, and their output shapes |
+| `list` | Show the thirteen concepts, their triggers, and their output shapes |
 | `select - <scope>` | Determine which concepts the scope triggers. `<scope>` = diff, task ID, milestone, path |
 | `run - FLS-<nn>` | Run one concept |
 | `run - <scope>` | `select` then run every triggered concept |
@@ -60,6 +60,7 @@ A concept is a **review lens**: one narrow question asked well, repeatedly, with
 | **FLS-10** | Accessibility and inclusivity | `accessibility-inclusivity` | Any user-facing surface, text, colour, interaction, copy |
 | **FLS-11** | Security and privacy | `security-privacy` | Auth, storage, network, permissions, logging, third-party SDKs |
 | **FLS-12** | Test integrity | `test-integrity` | Any new or modified test, or a change to tested behaviour |
+| **FLS-13** | UI craft | `ui-craft` | New or changed screens, widgets or presentation files; theme and token changes; visual polish |
 
 Each concept lives at `concepts/<slug>/prompt.md` with its question set, evidence requirements, and verdict rules.
 
@@ -175,7 +176,7 @@ Attach the full output to `{FLUTTER_WORK_ROOT}/concepts/<task-id>-<slug>.md` whe
 - Reporting a performance or accessibility result that was not measured.
 - Repairing during the run.
 - Softening a blocker to a major because the fix is inconvenient.
-- Running the whole pack on every diff — twelve shallow runs are worth less than three real ones.
+- Running the whole pack on every diff — thirteen shallow runs are worth less than three real ones.
 - Leaving the output unattached to the iteration or SPEC.
 
 ---

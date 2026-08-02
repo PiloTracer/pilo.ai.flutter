@@ -29,17 +29,17 @@ Not "does it look right", not "did the agent say it passed". Every claim needs a
 | `@flutter-verify gate` | after a task | mechanical chain only, seconds |
 | `@flutter-verify uncommitted` | before committing | your diff: secrets, scope, review |
 | `@flutter-verify last` | after committing | commit hygiene, evidence |
-| `@flutter-verify milestone` | before closing a milestone | 14 dimensions, minutes |
+| `@flutter-verify milestone` | before closing a milestone | 15 dimensions, minutes |
 
 Use the narrowest scope that answers the question. A milestone audit before every commit is not thoroughness, it is friction that gets disabled.
 
 ---
 
-## The 14 dimensions
+## The 15 dimensions
 
 `@flutter-verify milestone`:
 
-SPEC conformance · architecture · state management · data layer · error handling · tests · accessibility · performance · security · platform parity · localisation · observability · documentation · plan alignment.
+Requirement coverage · SPEC conformance · UI states · architecture · state management · error handling · data integrity · test coverage · mechanical gate · scope discipline · security & privacy · accessibility · performance · AI-assisted change safety · visual craft.
 
 Each produces findings with file and line, a severity, and a route. Each finding names the skill that fixes it.
 
@@ -47,7 +47,7 @@ Each produces findings with file and line, a severity, and a route. Each finding
 
 ## Concepts
 
-Twelve review lenses. Run against real code, producing findings with locations.
+Thirteen review lenses. Run against real code, producing findings with locations.
 
 | | | |
 |---|---|---|
@@ -55,6 +55,7 @@ Twelve review lenses. Run against real code, producing findings with locations.
 | FLS-02 state-management integrity | FLS-06 **AI-assisted change safety** | FLS-10 accessibility |
 | FLS-03 layer boundaries | FLS-07 platform parity | FLS-11 security and privacy |
 | FLS-04 async and error safety | FLS-08 performance budget | FLS-12 test integrity |
+| | | FLS-13 UI craft |
 
 `@flutter-concept-run select` matches the diff against each concept's triggers and tells you which apply.
 

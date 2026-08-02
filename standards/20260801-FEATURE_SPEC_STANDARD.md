@@ -46,7 +46,7 @@ All sixteen are mandatory. "N/A" is an acceptable content with a **reason** — 
 | 2 | **Scope** | In-scope list, and an explicit **out-of-scope** list. Non-goals prevent more rework than goals cause |
 | 3 | **Actors and preconditions** | Who, in what auth state, with what permissions and what data present |
 | 4 | **User flows** | Step by step, with entry points, exit points, and back behaviour at each step. Include the abandonment path |
-| 5 | **Screens and surfaces** | Route names and paths; which surfaces are new; who owns the visual design |
+| 5 | **Screens and surfaces** | Route names and paths; which surfaces are new; who owns the visual design; **per screen: the one dominant element and the single primary action** (UI_CRAFT_STANDARD §3 — a screen without that decision cannot be verified for hierarchy) |
 | 6 | **UI states** ★ | For **every** surface: loading, empty, partial, error, offline, success. Each described in terms of what the user sees and can do |
 | 7 | **Data contract** | Entities read and written, source of truth, freshness and staleness tolerance, cache policy, validation rules |
 | 8 | **Business rules** | Numbered `R1…Rn`, each independently testable, each stating its outcome when violated |
@@ -148,3 +148,4 @@ Discovering a gap during implementation is normal and expected. Silently impleme
 | 12 | No open items, or each with owner and scope impact |
 | 13 | No implementation prescription |
 | 14 | Concept registry populated |
+| 15 | Every screen names its dominant element and single primary action |

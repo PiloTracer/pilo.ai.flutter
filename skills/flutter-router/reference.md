@@ -27,6 +27,7 @@ Authoritative routing table for [`skill.md`](skill.md). When a skill or standard
 | `data` | "how do I model JSON?" · "repository pattern?" · "local database?" · "how do I migrate stored data?" | `@flutter-data <mode>` | `standards/20260801-DATA_LAYER_STANDARD.md` |
 | `errors` | "how do I return errors?" · "Result or exceptions?" · "how do I show an error to the user?" | `@flutter-concept-run run - FLS-04` | `standards/20260801-ARCHITECTURE_STANDARD.md` § Error handling |
 | `theming` | "how do I theme the app?" · "where do colors live?" · "Material 3?" · "dark mode?" | — (read the standard) | `standards/20260801-THEMING_STANDARD.md` |
+| `ui-craft` | "why does my app look cheap/basic?" · "how do I make it look premium?" · "spacing scale?" · "hierarchy?" · "one accent?" | `@flutter-concept-run run - FLS-13` | `standards/20260802-UI_CRAFT_STANDARD.md` · `resources/ui-craft.md` · `concepts/ui-craft/prompt.md` |
 | `l10n` | "how do I add translations?" · "ARB files?" · "RTL?" · "plurals?" | — (read the standard) | `standards/20260801-L10N_STANDARD.md` |
 | `platform` | "how do I call native code?" · "runtime permissions?" · "app links?" · "how do I write a plugin?" | `@flutter-platform <mode>` | `skills/flutter-platform/skill.md` · `concepts/platform-parity/prompt.md` |
 | `testing` | "what should I test?" · "widget vs integration?" · "how do goldens work?" · "coverage target?" | `@flutter-test plan` | `standards/20260801-TESTING_STANDARD.md` |

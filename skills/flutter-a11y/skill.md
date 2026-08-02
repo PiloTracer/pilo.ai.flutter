@@ -73,7 +73,7 @@ WCAG 2.2 level AA, expressed as Flutter-checkable rules. Deviations must be reco
 | `GestureDetector` / `InkWell` on a non-semantic widget | Tappable but not announced — needs a semantics wrapper or a semantic widget |
 | `Image` / `Icon` with no label and no explicit exclusion | Unclassified (A12) |
 | An icon-only button with no tooltip or label | Unlabelled control (A4) |
-| A hardcoded color literal in a widget | Cannot be contrast-checked centrally; route to THEMING_STANDARD |
+| A hardcoded color literal in a widget | Cannot be contrast-checked centrally; route to THEMING_STANDARD (and a UI_CRAFT_STANDARD §4 hygiene finding) |
 | A fixed-height container holding text | Overflow risk at large scale (A7) |
 | `Text` with a hardcoded small font size | May fail A1 large-text thresholds and ignore user scaling |
 | A custom control with no semantics | Invisible to assistive technology (A4, A5) |

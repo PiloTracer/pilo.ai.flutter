@@ -65,8 +65,12 @@ elif [ -n "$STAGED_DART" ]; then
 fi
 
 # ------------------------------------------------------------- 5. hygiene
-if [ -n "$STAGED_DART" ] && [ -x "${AOS_ROOT}/scripts/dart-hygiene-check.sh" ]; then
-  if ! printf '%s\n' "$STAGED_DART" | xargs -r "${AOS_ROOT}/scripts/dart-hygiene-check.sh" >/tmp/aos-hygiene.$$ 2>&1; then
+# scripts/fixtures/ is deliberately-broken verifier test data — its gate is
+# self-test.sh, not this hook. Exempt it here or the framework can never commit
+# the very fixtures that keep the verifiers honest.
+HYGIENE_FILES="$(printf '%s\n' "$STAGED_DART" | grep -v '^scripts/fixtures/' || true)"
+if [ -n "$HYGIENE_FILES" ] && [ -x "${AOS_ROOT}/scripts/dart-hygiene-check.sh" ]; then
+  if ! printf '%s\n' "$HYGIENE_FILES" | xargs -r "${AOS_ROOT}/scripts/dart-hygiene-check.sh" >/tmp/aos-hygiene.$$ 2>&1; then
     if grep -q 'BLOCKER' /tmp/aos-hygiene.$$; then
       bad "hygiene blockers"
       grep 'BLOCKER' /tmp/aos-hygiene.$$ | head -10 >&2

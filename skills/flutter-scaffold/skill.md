@@ -101,7 +101,7 @@ lib/
     │       ├── domain/           # entities, value objects, repository interface
     │       └── presentation/     # view models, screens, widgets
     ├── routing/                  # router, routes, guards
-    ├── theme/                    # ThemeData, color scheme, typography
+    ├── theme/                    # ThemeData, colour scheme, typography, spacing/radii/duration tokens
     └── l10n/                     # ARB files and generated delegates
 test/                             # mirrors lib/src exactly
 integration_test/
@@ -118,7 +118,7 @@ Generate, per `{FLUTTER_STACK_LOCK}` and the matching [`stacks/`](../../stacks/)
 | Entry | `bootstrap.dart` with a guarded zone, error handlers (`FlutterError.onError`, `PlatformDispatcher.instance.onError`), logging init, DI init |
 | DI | The composition root in the locked style, wired but empty |
 | Routing | Router config with a home route and a not-found route |
-| Theme | Light and dark `ThemeData` from a single color-seed source, per THEMING_STANDARD |
+| Theme | Light and dark `ThemeData` from a single color-seed source, per THEMING_STANDARD — plus the craft wiring per UI_CRAFT_STANDARD: the spacing scale (4/8/16/24/32) as a `ThemeExtension`, a neutral grey ramp with **one** accent (never a stock `Colors.<name>` seed shipped untouched), semantic status colours, and a `TextTheme` with the dominant-element display style (~2.5× body) |
 | l10n | `l10n.yaml`, a base ARB, and the generated-delegate wiring, when doc 02 requires localisation |
 | Config | `AppConfig` read from `--dart-define`, one instance per flavor |
 | Error | The project's failure type and the Result idiom from ARCHITECTURE_STANDARD |
@@ -208,5 +208,6 @@ Read-only. Compare the actual tree against the DIRECTORY_MAP and report: conform
 | 9 | `flutter test` placeholder green | pass/fail/not run | count |
 | 10 | Test mirror created for new source | pass/fail | paths |
 | 11 | Six states stubbed on generated screens | pass/skip | |
+| 11b | Theme carries spacing tokens, one accent + neutral ramp (UI_CRAFT) | pass/skip | |
 | 12 | No business logic invented | pass/fail | |
 | 13 | No secrets in generated config | pass/fail | |

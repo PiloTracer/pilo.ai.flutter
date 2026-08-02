@@ -1,4 +1,4 @@
-# Concept pack — FLS-01 … FLS-12
+# Concept pack — FLS-01 … FLS-13
 
 A **concept** is a review lens: one narrow question, asked the same rigorous way every time. Skills own workflow; concepts own judgement.
 
@@ -24,6 +24,7 @@ Run them with [`@flutter-concept-run`](../skills/flutter-concept-run/skill.md). 
 | FLS-10 | Accessibility and inclusivity | [`accessibility-inclusivity`](accessibility-inclusivity/prompt.md) | Any user-facing surface |
 | FLS-11 | Security and privacy | [`security-privacy`](security-privacy/prompt.md) | Auth, storage, network, permissions, logging, SDKs |
 | FLS-12 | Test integrity | [`test-integrity`](test-integrity/prompt.md) | Any new or modified test |
+| FLS-13 | UI craft | [`ui-craft`](ui-craft/prompt.md) | Any new or changed screen, widget or theme |
 
 ---
 
@@ -44,7 +45,8 @@ Run them with [`@flutter-concept-run`](../skills/flutter-concept-run/skill.md). 
 | Trigger | Concepts |
 |---------|----------|
 | Any agent-authored source or test change | **FLS-06** (mandatory before `complete`) |
-| New screen or widget | 01, 02, 05, 10, 12 |
+| New screen or widget | 01, 02, 05, 10, 12, 13 |
+| Theme, tokens or visual polish | 13, 10 |
 | New repository, source or model | 03, 04, 09, 11, 12 |
 | New route or deep link | 05, 11 |
 | Platform channel, permission, native config | 07, 11 |
@@ -54,7 +56,7 @@ Run them with [`@flutter-concept-run`](../skills/flutter-concept-run/skill.md). 
 | Before a release | 07, 08, 10, 11 |
 | Foundation P2 (architecture) | 03 |
 
-Three real runs beat twelve shallow ones. `@flutter-concept-run select` justifies both its includes and its excludes for exactly this reason.
+Three real runs beat thirteen shallow ones. `@flutter-concept-run select` justifies both its includes and its excludes for exactly this reason.
 
 ---
 

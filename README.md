@@ -32,8 +32,8 @@ The framework is a set of **markdown protocols** any LLM can follow, plus **shel
 | Directory | Contents |
 |-----------|----------|
 | [`skills/`](skills/README.md) | 25 skills. Each has hard rules, modes, prerequisite gates, protocols and a completion checklist |
-| [`standards/`](standards/README.md) | 20 standards + protected surfaces. Templates that become project-binding once tokens are filled |
-| [`concepts/`](concepts/README.md) | FLS-01…FLS-12 review lenses, run against real diffs |
+| [`standards/`](standards/README.md) | 21 standards + protected surfaces. Templates that become project-binding once tokens are filled |
+| [`concepts/`](concepts/README.md) | FLS-01…FLS-13 review lenses, run against real diffs |
 | [`stacks/`](stacks/README.md) | Per-state-management idiom guides: Riverpod, Bloc, Provider, Signals |
 | [`resources/`](resources/README.md) | Vetted OSS package catalog with licences; Flutter CLI reference |
 | [`templates/`](templates/) | What `@flutter-bootstrap init` writes into a repo |

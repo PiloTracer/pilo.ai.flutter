@@ -245,7 +245,8 @@ Enforced by `scripts/dart-hygiene-check.sh`:
 | Pattern | Why it fails |
 |---------|--------------|
 | `print(` / `debugPrint(` in `lib/` | Use the project logger; see OBSERVABILITY_STANDARD |
-| `Color(0xFF…)` / `Colors.<name>` inside a widget build | Colors come from the theme; see THEMING_STANDARD |
+| `Color(0xFF…)` / `Colors.<name>` inside a widget build | Colors come from the theme; see THEMING_STANDARD and UI_CRAFT_STANDARD §4 (factory palettes are a blocker) |
+| Raw `EdgeInsets` / `SizedBox` / `fontSize:` literals in a widget | Spacing and text styles come from the theme; see UI_CRAFT_STANDARD §2–3 — flagged by `dart-hygiene-check.sh` |
 | `// ignore:` or `// ignore_for_file:` with no trailing reason | Silencing without justification |
 | `TODO` with no issue or task reference | Untracked debt |
 | `http://` in a non-test Dart file | Cleartext transport |

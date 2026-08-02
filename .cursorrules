@@ -70,13 +70,14 @@ If you catch yourself about to write "as of version X" — stop, and describe th
 | Fixture | Must keep failing |
 |---------|-------------------|
 | `scripts/fixtures/dart/dirty.dart` | hygiene violations |
+| `scripts/fixtures/dart/cheap-ui.dart` | factory palette, raw spacing, fontSize literals |
 | `scripts/fixtures/dart/domain/entity.dart` | Flutter import in `domain/` |
 | `scripts/fixtures/dart/repositories/` | repository importing a repository |
 | `scripts/fixtures/dart/presentation/` | UI importing the data layer |
 | `scripts/fixtures/plan/broken-plan.md` | uncovered requirement, untraced task, residue |
 | `scripts/fixtures/ledger/lying-ledger.md` | confirmed claims with no recorded answers |
 
-**Never "fix" a fixture.** Doing so makes the self-test pass while proving nothing, and the framework loses its ability to detect its own regressions silently — the worst possible failure mode, because everything still reports green. `clean.dart`, `good-plan.md`, and `honest-ledger.md` are the opposite: they must stay clean, since a false positive there would push someone to switch the check off.
+**Never "fix" a fixture.** Doing so makes the self-test pass while proving nothing, and the framework loses its ability to detect its own regressions silently — the worst possible failure mode, because everything still reports green. `clean.dart`, `theme/app_theme.dart`, `good-plan.md`, and `honest-ledger.md` are the opposite: they must stay clean, since a false positive there would push someone to switch the check off. `theme/app_theme.dart` specifically guards the path-level theme exemption — theme files are where raw values are *defined*.
 
 When a fixture legitimately needs to change, change the assertion in `self-test.sh` in the same edit, and say in your summary which behaviour you re-baselined and why.
 
