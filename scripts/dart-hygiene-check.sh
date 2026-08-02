@@ -104,7 +104,11 @@ scan MINOR 'ListView\( *$' \
      'non-builder ListView — verify the child count is bounded'
 
 # Layer purity: Flutter imports inside domain/
+# Test trees mirror lib/ paths; they exercise layers — they are not the product graph.
 for f in "${FILES[@]}"; do
+  case "$f" in
+    test/*|*/test/*) continue ;;
+  esac
   case "$f" in
     */domain/*)
       while IFS=: read -r line _; do
@@ -120,6 +124,9 @@ done
 # ViewModel or a use case.
 for f in "${FILES[@]}"; do
   case "$f" in
+    test/*|*/test/*) continue ;;
+  esac
+  case "$f" in
     *_repository.dart|*_repository_impl.dart|*/repositories/*)
       self="$(basename "$f" .dart)"
       while IFS=: read -r line content; do
@@ -134,7 +141,13 @@ done
 
 # Widgets reaching past the ViewModel into the data layer. The boundary exists
 # so the view cannot do this; an import is the proof it happened.
+# Composition roots under presentation/ (e.g. *_providers.dart) wire interfaces
+# to implementations — that is DI, not a widget reaching past the ViewModel.
 for f in "${FILES[@]}"; do
+  case "$f" in
+    test/*|*/test/*) continue ;;
+    *_providers.dart|*_provider.dart|*/di/*) continue ;;
+  esac
   case "$f" in
     */presentation/*|*_view.dart|*_screen.dart|*_page.dart)
       while IFS=: read -r line _; do

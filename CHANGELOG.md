@@ -16,6 +16,7 @@ All notable changes to Flutter Agent OS. Format follows [Keep a Changelog](https
 - **Catalog:** document that `sqlite3_flutter_libs` is EOL; Drift consumers use `package:sqlite3` ≥3.x
 - **`flutter-deploy` basic:** empty target directories need `git init` before the pointer is written
 - **`flutter-scaffold`:** pub-get must prove codegen pins against the installed SDK (`meta` pin vs latest `build_runner`)
+- **`dart-hygiene-check.sh`:** skip layer-boundary rules under `test/`; allow `*_providers.dart` / `di/` as composition roots
 - **`hooks/pre-push`:** framework repo runs `framework-verify` + `self-test` instead of `flutter test` (there is no app `test/` here); adopter repos without a test tree report `unverified` instead of a false block
 
 ## [1.0.1] — 2026-08-02
