@@ -129,6 +129,8 @@ Generate, per `{FLUTTER_STACK_LOCK}` and the matching [`stacks/`](../../stacks/)
 
 Run `flutter pub get` → `dart format --set-exit-if-changed .` → `flutter analyze` → `flutter test`. All four must pass. Report the tree, the commands with exit codes, and the next command.
 
+**Pub resolve discipline:** never pin `build_runner` (or any codegen driver) to "whatever pub.dev shows as latest" without resolving against the installed Flutter SDK. Flutter pins `meta` via `flutter_test`; a newer `build_runner` that needs a newer `meta` fails `pub get` before any code is wrong. If resolve fails, lower the codegen pin to the version `flutter pub add` suggests, record it in the scaffold report, and do not claim the stack lock's "seen on pub.dev" version is installable until `pub get` exits 0.
+
 ---
 
 ## feature protocol

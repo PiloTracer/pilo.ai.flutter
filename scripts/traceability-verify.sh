@@ -37,7 +37,9 @@ printf '\nInventory\n'
 # to any line mentioning both a requirement and a task.
 # `##+` rather than `#{2,3}`: mawk does not enable interval expressions by
 # default, and silently matches nothing rather than erroring.
-awk '/^##+ +[0-9]*\.? *[Tt]raceability/{f=1; next} /^##+ /{f=0} f' "$PLAN" > "$TMP/matrix"
+# Close the section only on the next level-2 heading. Level-3 subheads
+# (### F0 — …) are content inside §11 / §13, not a new plan section.
+awk '/^## +[0-9]*\.? *[Tt]raceability/{f=1; next} /^## /{f=0} f' "$PLAN" > "$TMP/matrix"
 if [ ! -s "$TMP/matrix" ]; then
   fail "no traceability matrix section found — coverage cannot be checked mechanically"
   grep -nE '(FR|NFR)[0-9]+.*F[0-9]+-T[0-9]+' "$PLAN" > "$TMP/matrix" || true
@@ -75,7 +77,7 @@ else FAILS=$((FAILS+1)); printf '  FAIL  %s untraced tasks\n' "$UNTRACED" >&2; f
 printf '\nMilestone consistency\n'
 # Declared milestones come from § Milestones only. Searching the whole plan
 # would let a task id declare its own milestone, which defeats the check.
-awk '/^##+ +[0-9]*\.? *[Mm]ilestones/{f=1; next} /^##+ /{f=0} f' "$PLAN" \
+awk '/^## +[0-9]*\.? *[Mm]ilestones/{f=1; next} /^## /{f=0} f' "$PLAN" \
   | grep -oE '\bF[0-9]+\b' | sort -u > "$TMP/milestones"
 
 if [ ! -s "$TMP/milestones" ]; then

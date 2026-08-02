@@ -72,6 +72,7 @@ Free, open source, commercial-use-permitted packages, organised by the problem t
 | `shared_preferences` | BSD-3 | Scalar preferences. **Plaintext on disk** — never secrets. Use `SharedPreferencesAsync` / `SharedPreferencesWithCache`; the legacy `SharedPreferences` singleton is slated for deprecation, and on Android the new APIs sit on DataStore. Migrate with `migrateLegacySharedPreferencesToSharedPreferencesAsyncIfNecessary` (idempotent, safe on every launch) |
 | `flutter_secure_storage` | BSD-3 | Keychain / Keystore. The **only** place for tokens and keys |
 | `drift` | MIT | SQLite with typed queries, reactive streams, real migrations. The default for relational data |
+| `sqlite3` | MIT | Native SQLite bindings used by Drift on desktop/mobile. **Use package `sqlite3` ≥3.x.** Do **not** add `sqlite3_flutter_libs` — that package is EOL (`0.6.0+eol`); pub.dev directs consumers to `sqlite3` 3.x instead |
 | `sqflite` | BSD-2 | Raw SQLite when you want no abstraction. What the official persistence recipe uses |
 | `path_provider` | BSD-3 | Platform directories |
 | `hive_ce` | Apache-2.0 / BSD-3 | **Migration target only.** The maintained successor to the abandoned `hive`. Its own maintainer advises against it for greenfield work — take that at face value |

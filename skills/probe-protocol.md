@@ -120,24 +120,33 @@ Take the claim you are about to make (`foundation-complete`, `plan-ready`, `SPEC
 
 Persist state in the caller's ledger so a probe is **resumable and auditable** across sessions and across different LLMs.
 
-Template: [`templates/work.flutter/plans/foundation/PROBE_LEDGER.md`](../templates/work.flutter/plans/foundation/PROBE_LEDGER.md). Honesty rules are machine-checked by [`scripts/readiness-verify.sh`](../scripts/readiness-verify.sh), which fails the build when a row claims `confirmed/high` with an empty evidence cell, or when the stated coverage percentage does not match the table.
+Template: [`templates/work.flutter/plans/foundation/PROBE_LEDGER.md`](../templates/work.flutter/plans/foundation/PROBE_LEDGER.md). Honesty rules are machine-checked by [`scripts/readiness-verify.sh`](../scripts/readiness-verify.sh). The script is the source of truth for shape: a coverage table with numeric **Score** (0/1/2), and a Q&A ledger table that records the actual questions. `certify` adds `--gate`, which also requires every ★ dimension at score 2.
 
-Required ledger shape:
+Required ledger shape (must match the template and the verifier — do not invent a parallel Status/Conf table):
 
 ```markdown
-**Coverage:** <NN>% (target 85%)
+## Coverage
 
-| Dim | Topic | Status | Conf | Evidence / source | Iter |
-|-----|-------|--------|------|-------------------|------|
-| D1 ★ | product intent | confirmed | high | doc 01 §2 Intent | 1 |
-| D3 ★ | platform targets | partial | med | owner answer p2; min iOS still open | 2 |
+Stated coverage: 100%
 
-## Open probes
-| Dim | Question | Asked (iter) |
+| Dim | Topic | ★ | Score | Confirmed means |
+|-----|-------|---|-------|-----------------|
+| D1 | Product intent | ★ | 2 | … |
+| D9 | Risks | | 2 | … |
 
-## Deferred (→ UNKNOWNS.md)
-| Dim | Question | Owner | Blocks |
+Score: 0 unknown · 1 partial · 2 confirmed.
 
-## Iteration log
-| Iter | Date | Asked | Answered | Coverage after | Challenge verdict |
+## Ledger
+
+| # | Date | Dim | Question | Answer | Unblocked | Recorded in |
+|---|------|-----|----------|--------|-----------|-------------|
+| 1 | YYYY-MM-DD | D1 | … | … | P0 identity | doc 01 §2 |
+
+## Challenge pass
+| # | Claim | Challenge | Outcome |
+
+## Deferred
+| # | Question | Why deferred | Blocks from |
 ```
+
+Entry `#` may be a bare integer (`1`) or a short prefixed id (`L1`). Every dimension at Score 2 must appear in at least one Ledger row. Empty Answer or Recorded-in cells fail the honesty check.

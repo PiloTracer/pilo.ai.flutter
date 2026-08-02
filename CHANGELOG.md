@@ -6,6 +6,17 @@ All notable changes to Flutter Agent OS. Format follows [Keep a Changelog](https
 
 ---
 
+## [Unreleased]
+
+### Fixed — framework test-run against OfficeToolCombo (2026-08-02)
+- **`readiness-verify.sh` false FAIL on `L1`-style ledger ids.** Entry rows like `| L1 |` were counted as zero questions; bare integers and a single letter prefix are both accepted
+- **`probe-protocol.md` ledger shape** now matches the machine-checked template (Score + Q&A table), not a divergent Status/Conf sketch
+- **`analysis_options.yaml.template`** includes `package:flutter_lints/flutter.yaml` directly — a leftover `REPLACE:FLUTTER_LINT_PACKAGE` token broke every analyze on fresh bootstrap
+- **`traceability-verify.sh`** (and matching section cutters) end a numbered section only on the next `## ` heading, so `### F0` milestone subheads no longer empty §11
+- **Catalog:** document that `sqlite3_flutter_libs` is EOL; Drift consumers use `package:sqlite3` ≥3.x
+- **`flutter-deploy` basic:** empty target directories need `git init` before the pointer is written
+- **`flutter-scaffold`:** pub-get must prove codegen pins against the installed SDK (`meta` pin vs latest `build_runner`)
+
 ## [1.0.1] — 2026-08-02
 
 Ecosystem corrections. Several widely-repeated pieces of Flutter advice are now false, and a framework that repeats them teaches an agent to write code that does not compile, CI steps that do not run, and triage that changes the wrong files. Everything here is a correction to a factual claim, not a design change.

@@ -56,7 +56,7 @@ Installs **the framework**, not the app. `@flutter-release` ships your Flutter a
 
 ## basic protocol
 
-1. **Resolve** the target repo root (must contain `.git` or be explicitly confirmed) and the absolute framework source path.
+1. **Resolve** the target repo root (must contain `.git` or be explicitly confirmed) and the absolute framework source path. An empty directory with no `.git` is not yet a repo — run `git init -b main` in the target (operator-confirmed) before writing the pointer, or stop and ask. Do not invent a remote.
 2. **Detect an existing install** — a pointer file, a framework directory, or `.cursorrules` registration. Found → stop and route to `update`.
 3. **Write the pointer** `FLUTTER_AGENT_OS.md` at the target root:
 

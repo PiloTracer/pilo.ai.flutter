@@ -6,7 +6,10 @@
 # A rule that does not fit this project is disabled here with a comment saying
 # why. A growing list of tolerated warnings is the same as having no analyzer.
 
-include: package:REPLACE:FLUTTER_LINT_PACKAGE/analysis_options.yaml
+# Default lint set. Override only with an explicit project decision recorded in
+# STACK.md / DOCS_FLUTTER_STACK.md — never leave a REPLACE: token here; a broken
+# include fails every analyze before the first line of app code is checked.
+include: package:flutter_lints/flutter.yaml
 
 # Analyzer plugins (stack-specific lints such as riverpod_lint) go under this
 # TOP-LEVEL key — not under `analyzer:`. They then run inside `dart analyze`,

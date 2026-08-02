@@ -76,7 +76,9 @@ printf '\nCoverage table\n'
   || { FAILS=$((FAILS+1)); printf '  FAIL  %s unsupported confirmations\n' "$BAD" >&2; }
 
 printf '\nLedger entries\n'
-ENTRIES="$(grep -cE '^\| *[0-9]+ *\|' "$TMP/qa" 2>/dev/null | tr -d ' ')"
+# Entry ids may be bare integers (fixture style: | 1 |) or prefixed (L1, Q1).
+ENTRY_RE='^\| *[A-Za-z]?[0-9]+ *\|'
+ENTRIES="$(grep -cE "$ENTRY_RE" "$TMP/qa" 2>/dev/null | tr -d ' ')"
 ENTRIES="${ENTRIES:-0}"
 if [ "$CONFIRMED" -gt 0 ] && [ "$ENTRIES" -eq 0 ]; then
   fail "$CONFIRMED dimensions confirmed but the ledger records no questions at all"
@@ -92,7 +94,7 @@ while IFS= read -r row; do
   ans="$(printf '%s' "$row" | awk -F'|' '{gsub(/^ +| +$/,"",$6); print $6}')"
   [ -z "$ans" ] && THIN=$((THIN+1))
   [ -z "$rec" ] && THIN=$((THIN+1))
-done < <(grep -E '^\| *[0-9]+ *\|' "$TMP/qa" 2>/dev/null)
+done < <(grep -E "$ENTRY_RE" "$TMP/qa" 2>/dev/null)
 [ "$THIN" -eq 0 ] && pass "every entry has an answer and a destination" \
   || fail "$THIN ledger cells are empty (answer or 'recorded in')"
 
