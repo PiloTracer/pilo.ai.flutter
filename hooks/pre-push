@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 # FLUTTER_AGENT_OS_HOOK
-# pre-push: runs the test suite before work leaves the machine.
+# pre-push: last cheap gate before work leaves the machine.
 #
-# This is the last cheap place to catch a break. After the push it is CI's
-# problem, and CI's feedback loop is measured in minutes.
+# Adopter app with a Flutter test tree → `flutter test`.
+# This framework repository → `framework-verify.sh` + `self-test.sh`.
+# Neither → report unverified and allow (do not invent a green suite).
 
 set -uo pipefail
 
@@ -17,13 +18,48 @@ case "$REMOTE_REF" in
     printf 'pre-push: pushing to a protected branch\n' ;;
 esac
 
+# Framework source tree: skills + scripts, no app pubspec at root.
+if [ -f "$REPO/skills/README.md" ] && [ -f "$REPO/scripts/self-test.sh" ] \
+   && [ ! -f "$REPO/pubspec.yaml" ]; then
+  printf 'pre-push: framework suite (framework-verify + self-test)\n'
+  if ! bash "$REPO/scripts/framework-verify.sh"; then
+    cat >&2 <<'EOF'
+
+pre-push BLOCKED: framework-verify failed.
+
+Fix the framework. Do not delete or weaken a check to get past this.
+EOF
+    exit 1
+  fi
+  if ! bash "$REPO/scripts/self-test.sh"; then
+    cat >&2 <<'EOF'
+
+pre-push BLOCKED: self-test failed.
+
+Fix the framework. Do not delete or weaken a check to get past this.
+EOF
+    exit 1
+  fi
+  printf 'pre-push ok\n'
+  LOCAL="$(dirname "$0")/pre-push.local"
+  [ -x "$LOCAL" ] && exec "$LOCAL" "$@"
+  exit 0
+fi
+
+if [ ! -d "$REPO/test" ] && [ ! -d "$REPO/integration_test" ]; then
+  printf 'pre-push: no test/ or integration_test/ — tests NOT run (unverified, not passed)\n' >&2
+  LOCAL="$(dirname "$0")/pre-push.local"
+  [ -x "$LOCAL" ] && exec "$LOCAL" "$@"
+  exit 0
+fi
+
 if ! command -v flutter >/dev/null 2>&1; then
   printf 'pre-push: flutter not on PATH — tests NOT run (unverified, not passed)\n' >&2
   exit 0
 fi
 
-printf 'pre-push: running tests\n'
-OUT="$(flutter test --no-pub 2>&1)"
+printf 'pre-push: running flutter test\n'
+OUT="$(flutter test 2>&1)"
 CODE=$?
 
 if [ "$CODE" -ne 0 ]; then
