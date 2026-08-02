@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+# FLUTTER_AGENT_OS_HOOK
+# Pre-commit: fast, local checks. Anything slow belongs in CI — a slow hook is a
+# bypassed hook.
+#
+# Bypass with --no-verify is a deliberate human decision. Agents never bypass.
+
+set -uo pipefail
+
+AOS_ROOT="__FLUTTER_AGENT_OS_ROOT__"
+REPO="$(git rev-parse --show-toplevel)"
+FAILED=0
+cd "$REPO" || exit 1
+
+say()  { printf '%s\n' "$1"; }
+bad()  { FAILED=1; printf 'BLOCKED: %s\n' "$1" >&2; }
+
+STAGED_DART="$(git diff --cached --name-only --diff-filter=ACM | grep '\.dart$' || true)"
+STAGED_ALL="$(git diff --cached --name-only --diff-filter=ACM || true)"
+[ -z "$STAGED_ALL" ] && exit 0
+
+say "flutter-agent-os pre-commit"
+
+# ------------------------------------------------- 1. never-commit paths
+while IFS= read -r f; do
+  case "$f" in
+    *.jks|*.keystore|*.p12|*.pem|*.cer|*.mobileprovision|*key.properties|*.env|*.env.*|*service-account*.json)
+      bad "$f is signing material or a credential. Remove it — and if it is real, revoke and rotate."
+      ;;
+  esac
+done <<< "$STAGED_ALL"
+
+# --------------------------------------------------------- 2. secret scan
+SECRETS="$(git diff --cached -U0 \
+  | grep -E '^\+' \
+  | grep -vE '^\+\+\+' \
+  | grep -EinC0 "(api[_-]?key|secret|passwd|password|token|private[_-]?key|bearer)[\"' ]*[:=][\"' ]*[A-Za-z0-9_/+=-]{16,}" \
+  | head -5 || true)"
+if [ -n "$SECRETS" ]; then
+  bad "possible secret in the diff (value not shown). Verify, remove, revoke and rotate."
+fi
+
+# --------------------------------------------------------- 3. dart format
+if [ -n "$STAGED_DART" ] && command -v dart >/dev/null 2>&1; then
+  UNFORMATTED="$(printf '%s\n' "$STAGED_DART" | xargs -r dart format --output=none --set-exit-if-changed 2>&1 || true)"
+  if printf '%s' "$UNFORMATTED" | grep -q 'Changed'; then
+    bad "unformatted Dart files. Run: dart format ."
+    printf '%s\n' "$UNFORMATTED" | head -10 >&2
+  else
+    say "  ok    format"
+  fi
+fi
+
+# ------------------------------------------------------------ 4. analyzer
+if [ -n "$STAGED_DART" ] && command -v flutter >/dev/null 2>&1; then
+  OUT="$(flutter analyze --no-pub 2>&1 || true)"
+  if printf '%s' "$OUT" | grep -qE '^ *(error|warning|info) •'; then
+    bad "analyzer issues — the gate is zero issues"
+    printf '%s\n' "$OUT" | grep -E '^ *(error|warning|info) •' | head -10 >&2
+  else
+    say "  ok    analyze"
+  fi
+elif [ -n "$STAGED_DART" ]; then
+  say "  warn  flutter not on PATH — analyzer not run (unverified, not passed)"
+fi
+
+# ------------------------------------------------------------- 5. hygiene
+if [ -n "$STAGED_DART" ] && [ -x "${AOS_ROOT}/scripts/dart-hygiene-check.sh" ]; then
+  if ! printf '%s\n' "$STAGED_DART" | xargs -r "${AOS_ROOT}/scripts/dart-hygiene-check.sh" >/tmp/aos-hygiene.$$ 2>&1; then
+    if grep -q 'BLOCKER' /tmp/aos-hygiene.$$; then
+      bad "hygiene blockers"
+      grep 'BLOCKER' /tmp/aos-hygiene.$$ | head -10 >&2
+    else
+      say "  warn  hygiene findings (non-blocking)"
+      grep -E 'MAJOR|MINOR' /tmp/aos-hygiene.$$ | head -5
+    fi
+  else
+    say "  ok    hygiene"
+  fi
+  rm -f /tmp/aos-hygiene.$$
+fi
+
+# --------------------------------------------------------- 6. touch scope
+if [ -x "${AOS_ROOT}/scripts/touch-scope-verify.sh" ]; then
+  if ! "${AOS_ROOT}/scripts/touch-scope-verify.sh" --staged >/tmp/aos-scope.$$ 2>&1; then
+    if grep -q 'DENIED' /tmp/aos-scope.$$; then
+      bad "denied paths in the diff"
+      cat /tmp/aos-scope.$$ >&2
+    else
+      say "  warn  out-of-scope files (review before committing)"
+      grep -A20 'out-of-scope files' /tmp/aos-scope.$$ | head -12
+    fi
+  else
+    say "  ok    scope"
+  fi
+  rm -f /tmp/aos-scope.$$
+fi
+
+# -------------------------------------------------------- 7. blast radius
+if [ -x "${AOS_ROOT}/scripts/blast-radius-check.sh" ]; then
+  if ! "${AOS_ROOT}/scripts/blast-radius-check.sh" --staged >/tmp/aos-blast.$$ 2>&1; then
+    say "  warn  high blast radius — acknowledge it in the verification report"
+    grep -E 'files:|lines:|areas:|risk:|protected|NEVER' /tmp/aos-blast.$$ | head -12
+    if grep -q 'NEVER COMMIT' /tmp/aos-blast.$$; then
+      bad "never-commit paths detected"
+    fi
+  else
+    say "  ok    blast radius"
+  fi
+  rm -f /tmp/aos-blast.$$
+fi
+
+# --------------------------------------------------- chain a preserved hook
+if [ -x "$(dirname "$0")/pre-commit.local" ]; then
+  say "  ---   running pre-commit.local"
+  "$(dirname "$0")/pre-commit.local" || FAILED=1
+fi
+
+if [ "$FAILED" -ne 0 ]; then
+  printf '\npre-commit FAILED. Fix the blockers above.\n' >&2
+  printf 'Do not use --no-verify to work around a real finding.\n' >&2
+  exit 1
+fi
+
+say "pre-commit ok"
+exit 0

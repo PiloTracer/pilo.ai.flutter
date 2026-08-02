@@ -1,0 +1,57 @@
+# Signing material and credentials — never committed
+*.jks
+*.keystore
+*.p12
+*.pem
+*.cer
+*.mobileprovision
+key.properties
+.env
+.env.*
+service-account*.json
+
+# Flutter / Dart build output
+build/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+coverage/
+*.g.dart.bak
+
+# Symbols from obfuscated builds — archive these outside the repo
+symbols/
+debug-info/
+
+# Golden test failures (the reference images ARE committed)
+**/failures/
+
+# iOS
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/flutter_export_environment.sh
+**/*.xcworkspace/xcuserdata/
+**/*.xcodeproj/xcuserdata/
+
+# Android
+android/.gradle/
+android/local.properties
+android/app/debug/
+android/app/profile/
+android/app/release/
+android/captures/
+
+# Agent OS scratch
+.work.flutter/analysis/tmp/
+.work.flutter/commit-ref-pending/
+
+# Editor / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db

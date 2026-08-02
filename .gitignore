@@ -1,0 +1,49 @@
+# Flutter Agent OS - framework repo ignores
+
+# Secrets / credentials
+.credentials/
+.private/
+*.pem
+*.p12
+*.jks
+*.keystore
+key.properties
+*.env
+.env
+.env.*
+!.env.example
+
+# Scratch (not part of the adoption contract)
+tmp/
+TMP/
+*.log
+
+# The framework does not carry a project memory of its own; consumers scaffold
+# their own with @flutter-bootstrap init.
+.work.flutter/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+*.iml
+
+# Python bytecode (verifier fixtures)
+__pycache__/
+*.pyc
+
+# Node (only if a tool is added later)
+node_modules/
+
+# Dart / Flutter build output (fixtures must stay source-only)
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+coverage/
+
+# Golden failures never get committed
+**/failures/

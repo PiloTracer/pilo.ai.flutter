@@ -1,0 +1,49 @@
+# Agent rules — REPLACE:FLUTTER_PROJECT_NAME
+
+Operating contract for AI agents in this repository. Precedence: a human instruction in the current message > this file > project standards in `.work.flutter/standards/` > an approved SPEC > framework standards.
+
+---
+
+## Ground rules (all agents, all tasks)
+
+1. **Read before writing.** `.work.flutter/context/HANDOFF_FLUTTER.md` and `.work.flutter/plans/NEXT_FLUTTER.md` first.
+2. **Evidence or silence.** Never state a result you did not observe. Quote the command and its output.
+3. **Gates stop work.** An unmet prerequisite produces a blocked report naming what is missing and which skill provides it.
+4. **Never weaken a check.** No deleted or skipped tests, no lowered thresholds, no suppressions without a linked ADR.
+5. **Stay in scope.** Fix what the task names. Report everything else instead of fixing it.
+6. **Ask when a decision is the operator's.** Product behaviour, scope, risk acceptance and irreversible actions are never inferred.
+7. **Record what you did.** A HANDOFF entry per session; one active pointer in NEXT.
+
+---
+
+## Protected files
+
+Require explicit human approval **in the same message** before editing. Full list: `.work.flutter/standards/PROTECTED_SURFACES.json`.
+
+Typical: `pubspec.yaml` · `analysis_options.yaml` · `lib/main.dart` · `lib/bootstrap.dart` · `lib/core/di/**` · `lib/core/router/**` · native build files and manifests · signing configuration · CI workflows · anything under `**/migrations/**`.
+
+**Never committed under any circumstances:** keystores, `key.properties`, `.p12`, provisioning profiles, `.env` files, service-account JSON.
+
+---
+
+## Migration policy
+
+Local-store migrations are numbered, ordered, idempotent and forward-only. Verified by **running twice**, and tested from every shipped schema version. Destructive steps require explicit human approval; agents never execute them. A migration defect destroys user data on devices you do not control — this is the highest-consequence code in the repository.
+
+---
+
+## Test data
+
+Fixtures are real captured payloads, sanitised. No production data in the repo. Ad-hoc writes against a shared database require human approval.
+
+---
+
+## Git
+
+Agents never commit, push, merge, rebase, force-push, reset or tag unless asked in the current message. `--no-verify` is a human decision.
+
+Commit format: `REPLACE:FLUTTER_TASK_REF_PREFIX-<n>: imperative subject` (≤72 chars). No AI attribution, no tool co-author trailers.
+
+---
+
+REPLACE:FLUTTER_SNIPPET_BLOCK

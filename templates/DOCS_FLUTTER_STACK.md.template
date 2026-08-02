@@ -1,0 +1,103 @@
+# Toolchain and commands — REPLACE:FLUTTER_PROJECT_NAME
+
+**Canonical source for every command an agent or a human runs in this repository.** When a skill, a standard or a guide disagrees with this file, this file wins — it accounts for this project's workspace layout, flavors and flags.
+
+Keep it accurate. A stale command here produces confidently wrong verification claims everywhere else.
+
+---
+
+## Pinned toolchain
+
+| Tool | Version | Pinned where |
+|------|---------|--------------|
+| Flutter | `REPLACE:FLUTTER_SDK_VERSION` | this file + CI + `REPLACE:FLUTTER_VERSION_FILE` |
+| Dart | `REPLACE:DART_SDK_VERSION` | bundled with Flutter |
+| Channel | `REPLACE:FLUTTER_CHANNEL` | |
+| JDK | `REPLACE:JDK_VERSION` | Android builds |
+| Xcode | `REPLACE:XCODE_VERSION` | iOS builds |
+| CocoaPods | `REPLACE:COCOAPODS_VERSION` | iOS builds |
+
+**CI uses the same versions.** Drift between CI and local is the most common source of unreproducible failures.
+
+---
+
+## Verification chain
+
+Run in this order. Each must be clean before the next means anything.
+
+| # | Purpose | Command | Pass condition |
+|---|---------|---------|----------------|
+| 1 | Format | `dart format --set-exit-if-changed .` | exit 0 |
+| 2 | Analyze | `REPLACE:FLUTTER_ANALYZE_CMD` | **0 issues** |
+| 3 | Codegen currency | `REPLACE:FLUTTER_CODEGEN_CMD` then `git diff --exit-code` | no diff |
+| 4 | Tests | `REPLACE:FLUTTER_TEST_CMD` | 0 failures, 0 unexpected skips |
+| 5 | Coverage | `REPLACE:FLUTTER_COVERAGE_CMD` | ≥ `REPLACE:FLUTTER_COVERAGE_MIN`% and not decreasing |
+
+---
+
+## Development
+
+| Purpose | Command |
+|---------|---------|
+| Fetch dependencies | `REPLACE:FLUTTER_PUBGET_CMD` |
+| Run (dev flavor) | `REPLACE:FLUTTER_RUN_DEV_CMD` |
+| Run (staging) | `REPLACE:FLUTTER_RUN_STAGING_CMD` |
+| Codegen watch | `REPLACE:FLUTTER_CODEGEN_WATCH_CMD` |
+| Regenerate localisations | `REPLACE:FLUTTER_L10N_CMD` |
+| List devices | `flutter devices` |
+
+---
+
+## Tests
+
+| Purpose | Command |
+|---------|---------|
+| All | `REPLACE:FLUTTER_TEST_CMD` |
+| One file | `flutter test <path>` |
+| Coverage report | `REPLACE:FLUTTER_COVERAGE_CMD` |
+| Update goldens (**review every diff**) | `REPLACE:FLUTTER_GOLDEN_UPDATE_CMD` |
+| Integration | `REPLACE:FLUTTER_INTEGRATION_CMD` |
+
+Golden platform of record: `REPLACE:GOLDEN_PLATFORM`. Goldens generated elsewhere will fail — font rasterisation differs by OS.
+
+---
+
+## Builds
+
+| Target | Command |
+|--------|---------|
+| Android bundle | `REPLACE:FLUTTER_BUILD_AAB_CMD` |
+| Android APKs | `REPLACE:FLUTTER_BUILD_APK_CMD` |
+| iOS | `REPLACE:FLUTTER_BUILD_IOS_CMD` |
+| Web | `REPLACE:FLUTTER_BUILD_WEB_CMD` |
+
+Release builds always carry `--obfuscate --split-debug-info=REPLACE:SYMBOLS_DIR`. **Symbols are archived per release and uploaded to the crash reporter**, or every crash report is unreadable.
+
+---
+
+## Performance
+
+| Purpose | Command |
+|---------|---------|
+| Profile run | `flutter run --profile -d <device>` |
+| Startup trace | `flutter run --profile --trace-startup -d <device>` |
+| Size analysis | `flutter build REPLACE:PRIMARY_TARGET --analyze-size` |
+| DevTools | `dart devtools` |
+
+Reference device: `REPLACE:REFERENCE_DEVICE_LOW`. Every performance number is reported with device, OS, build mode, Flutter version and run count.
+
+---
+
+## Flavors
+
+| Flavor | Entry point | Application id | Backend |
+|--------|-------------|----------------|---------|
+| dev | `REPLACE:DEV_ENTRYPOINT` | `REPLACE:DEV_APP_ID` | `REPLACE:DEV_BACKEND` |
+| staging | `REPLACE:STAGING_ENTRYPOINT` | `REPLACE:STAGING_APP_ID` | `REPLACE:STAGING_BACKEND` |
+| prod | `REPLACE:PROD_ENTRYPOINT` | `REPLACE:PROD_APP_ID` | `REPLACE:PROD_BACKEND` |
+
+---
+
+## Troubleshooting
+
+Route toolchain failures to `@flutter-doctor diagnose`. **Do not start with `flutter clean`** — it destroys the evidence that identifies the cause and usually does not help.

@@ -1,0 +1,64 @@
+# FLUTTER_AGENT_OS_BEGIN
+## Flutter Agent OS
+
+Framework: `REPLACE:FLUTTER_FRAMEWORK_PATH` · Project memory: `.work.flutter/` · Entry: `@flutter-director - <what you want>`
+
+### Placeholder map (resolve from repo root — never strip the prefix)
+
+| Placeholder | Path |
+|-------------|------|
+| `{FLUTTER_WORK_ROOT}` | `.work.flutter/` |
+| `{FLUTTER_HANDOFF}` | `.work.flutter/context/HANDOFF_FLUTTER.md` |
+| `{FLUTTER_NEXT}` | `.work.flutter/plans/NEXT_FLUTTER.md` |
+| `{FLUTTER_PLANS_ROOT}` | `.work.flutter/plans/` |
+| `{FLUTTER_MASTER_PLAN}` | `.work.flutter/plans/full/*-full-plan.md` (latest Approved) |
+| `{FLUTTER_SPEC_ROOT}` | `.work.flutter/features/` |
+| `{FLUTTER_STANDARDS_ROOT}` | `.work.flutter/standards/` |
+| `{FLUTTER_DECISIONS_ROOT}` | `.work.flutter/decisions/` |
+| `{FLUTTER_STACK_LOCK}` | `.work.flutter/STACK.md` |
+| `{APP_ROOT}` | `REPLACE:FLUTTER_APP_ROOT` |
+
+### Project
+
+| Item | Value |
+|------|-------|
+| Project | `REPLACE:FLUTTER_PROJECT_NAME` |
+| Flutter / Dart | `REPLACE:FLUTTER_SDK_VERSION` / `REPLACE:DART_SDK_VERSION` |
+| Platforms | `REPLACE:FLUTTER_PLATFORMS` (min iOS `REPLACE:FLUTTER_MIN_IOS`, min Android SDK `REPLACE:FLUTTER_MIN_ANDROID_SDK`) |
+| State / Navigation / DI | `REPLACE:FLUTTER_STATE_MANAGEMENT` / `REPLACE:FLUTTER_NAVIGATION` / `REPLACE:FLUTTER_DI` |
+| Serialization / HTTP / Local store | `REPLACE:FLUTTER_SERIALIZATION` / `REPLACE:FLUTTER_HTTP` / `REPLACE:FLUTTER_LOCAL_STORE` |
+| Test doubles | `REPLACE:FLUTTER_TEST_DOUBLE` |
+| Coverage floor | `REPLACE:FLUTTER_COVERAGE_MIN`% |
+| Task ref prefix | `REPLACE:FLUTTER_TASK_REF_PREFIX` |
+
+Commands are canonical in `DOCS_FLUTTER_STACK.md`.
+
+### Operating rules
+
+1. **Read before writing.** Load `{FLUTTER_HANDOFF}` and `{FLUTTER_NEXT}` before acting on project work.
+2. **Gates are binding.** A skill whose prerequisite is unmet stops and emits a blocked report. Never proceed "to be helpful".
+3. **Never report an unobserved result.** Quote the command and its output. Toolchain missing → `toolchain unavailable`, never a pass.
+4. **Never weaken a check** to make something pass: no deleted tests, no `skip:`, no lowered thresholds, no `// ignore:` without a linked ADR.
+5. **Scope discipline.** Touch only what the current task names. Anything else is a finding to report, not to fix.
+6. **No secrets** in source, assets, build config or `--dart-define` (those ship in the binary).
+7. **Protected surfaces** (`{FLUTTER_STANDARDS_ROOT}/PROTECTED_SURFACES.json`) need explicit human approval in the same message.
+8. **Git is opt-in.** Never commit, push, merge, rebase or tag unless asked in the current message.
+9. **AI-assisted by default.** Agent sessions run FLS-06 before an iteration completes. Do not self-classify out of it.
+10. **Record after acting.** Append a HANDOFF entry; keep exactly one active pointer in `{FLUTTER_NEXT}`.
+11. **Cohabitation.** `.ai` and `.ai.ui` own their own work trees and skills. Never write into them; route non-Flutter work out.
+
+### Skills
+
+Orchestration: `@flutter-director` `@flutter-router`
+Setup and planning: `@flutter-bootstrap` `@flutter-stack` `@flutter-foundation` `@flutter-plan-master` `@flutter-feature-spec` `@flutter-plan-verify` `@flutter-plan-repair`
+Implementation: `@flutter-scaffold` `@flutter-implementation` `@flutter-data` `@flutter-platform` `@flutter-release`
+Verification: `@flutter-test` `@flutter-verify` `@flutter-perf` `@flutter-a11y` `@flutter-security`
+Repair: `@flutter-repair` `@flutter-doctor`
+Support: `@flutter-session` `@flutter-concept-run` `@flutter-docs` `@flutter-deploy`
+
+Registry and gates: `REPLACE:FLUTTER_FRAMEWORK_PATH/skills/SKILL_DEPENDENCIES.md`
+
+### Commit policy
+
+`REPLACE:FLUTTER_TASK_REF_PREFIX-<n>: imperative subject` (≤72 chars). No AI attribution lines, no tool co-author trailers.
+# FLUTTER_AGENT_OS_END

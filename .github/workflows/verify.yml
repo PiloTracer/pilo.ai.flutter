@@ -1,0 +1,97 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  framework:
+    name: framework integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Framework verify
+        run: bash scripts/framework-verify.sh
+
+      - name: Self-test — the verifiers still catch what they claim to
+        run: bash scripts/self-test.sh
+
+      - name: Shell syntax
+        run: |
+          fail=0
+          for f in scripts/*.sh hooks/* templates/*.sh; do
+            [ -f "$f" ] || continue
+            bash -n "$f" || { echo "syntax error: $f"; fail=1; }
+          done
+          exit $fail
+
+      - name: Shellcheck
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq shellcheck
+          shellcheck -S warning scripts/*.sh hooks/* templates/*.sh || true
+
+  bootstrap:
+    name: bootstrap round-trip
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bootstrap into a clean directory
+        run: |
+          mkdir -p /tmp/greenfield && cd /tmp/greenfield && git init -q
+          bash "$GITHUB_WORKSPACE/templates/bootstrap.sh" --repo /tmp/greenfield
+
+      - name: Required artifacts exist
+        run: |
+          cd /tmp/greenfield
+          fail=0
+          for p in .work.flutter .work.flutter/context/HANDOFF_FLUTTER.md \
+                   .work.flutter/plans/NEXT_FLUTTER.md .work.flutter/STACK.md \
+                   .cursorrules analysis_options.yaml DOCS_FLUTTER_STACK.md; do
+            [ -e "$p" ] || { echo "missing: $p"; fail=1; }
+          done
+          exit $fail
+
+      - name: Idempotent — second run must not clobber
+        run: |
+          cd /tmp/greenfield
+          printf '\n# sentinel\n' >> .cursorrules
+          bash "$GITHUB_WORKSPACE/templates/bootstrap.sh" --repo "$PWD"
+          grep -q '# sentinel' .cursorrules || { echo "bootstrap clobbered existing content"; exit 1; }
+
+      - name: Brownfield — existing files preserved
+        run: |
+          mkdir -p /tmp/brownfield/lib && cd /tmp/brownfield && git init -q
+          echo "# mine" > analysis_options.yaml
+          echo "# mine" > .cursorrules
+          bash "$GITHUB_WORKSPACE/templates/bootstrap.sh" --repo "$PWD"
+          head -1 analysis_options.yaml | grep -q '# mine' || { echo "clobbered analysis_options.yaml"; exit 1; }
+          head -1 .cursorrules | grep -q '# mine' || { echo "clobbered .cursorrules"; exit 1; }
+
+  deploy:
+    name: install modes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: basic
+        run: |
+          mkdir -p /tmp/t1 && cd /tmp/t1 && git init -q
+          bash "$GITHUB_WORKSPACE/scripts/deploy-basic.sh" --target /tmp/t1
+          test -f /tmp/t1/FLUTTER_AGENT_OS.md
+          grep -q 'FLUTTER_AGENT_OS_BEGIN' /tmp/t1/.cursorrules
+
+      - name: basic is not silently repeatable
+        run: |
+          set +e
+          bash "$GITHUB_WORKSPACE/scripts/deploy-basic.sh" --target /tmp/t1
+          [ $? -eq 2 ] || { echo "expected exit 2 on reinstall"; exit 1; }
+
+      - name: files
+        run: |
+          mkdir -p /tmp/t2 && cd /tmp/t2 && git init -q
+          bash "$GITHUB_WORKSPACE/scripts/deploy-files.sh" --target /tmp/t2
+          bash /tmp/t2/.ai.flutter/scripts/framework-verify.sh --root /tmp/t2/.ai.flutter

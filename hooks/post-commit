@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+# FLUTTER_AGENT_OS_HOOK
+# post-commit: records the commit so @flutter-verify last and @flutter-session
+# close can reconcile what was committed against what the iteration claims.
+#
+# Never fails a commit — the commit already happened.
+
+set -uo pipefail
+
+REPO="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+WORK="${REPO}/.work.flutter"
+[ -d "$WORK" ] || exit 0
+
+PENDING="${WORK}/commit-ref-pending"
+mkdir -p "$PENDING" 2>/dev/null || exit 0
+
+SHA="$(git rev-parse --short HEAD 2>/dev/null)" || exit 0
+SUBJECT="$(git log -1 --pretty=%s 2>/dev/null)"
+# --root so the initial commit reports its files rather than zero.
+FILES="$(git diff-tree --no-commit-id --name-only -r --root HEAD 2>/dev/null | wc -l | tr -d ' ')"
+STAT="$(git show --numstat --format= HEAD 2>/dev/null | awk '{a+=$1; d+=$2} END{printf "+%d/-%d", a+0, d+0}')"
+TASK="$(printf '%s' "$SUBJECT" | grep -oE '^(F[0-9]+-T[0-9]+|[A-Z][A-Z0-9]+-[0-9]+)' || true)"
+
+{
+  printf 'sha: %s\n'      "$SHA"
+  printf 'date: %s\n'     "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  printf 'task: %s\n'     "${TASK:-none}"
+  printf 'subject: %s\n'  "$SUBJECT"
+  printf 'files: %s\n'    "$FILES"
+  printf 'lines: %s\n'    "$STAT"
+  printf 'branch: %s\n'   "$(git rev-parse --abbrev-ref HEAD 2>/dev/null)"
+} > "${PENDING}/${SHA}" 2>/dev/null || true
+
+# Keep the directory bounded — this is a reconciliation buffer, not a log.
+COUNT="$(find "$PENDING" -type f 2>/dev/null | wc -l | tr -d ' ')"
+if [ "$COUNT" -gt 200 ]; then
+  find "$PENDING" -type f -printf '%T@ %p\n' 2>/dev/null \
+    | sort -n | head -100 | cut -d' ' -f2- | xargs -r rm -f
+fi
+
+LOCAL="$(dirname "$0")/post-commit.local"
+[ -x "$LOCAL" ] && "$LOCAL" || true
+
+exit 0

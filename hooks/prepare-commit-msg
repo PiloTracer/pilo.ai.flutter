@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# FLUTTER_AGENT_OS_HOOK
+# prepare-commit-msg: strips AI attribution and prepends the active task id.
+#
+# Runs before the author sees the message, so attribution lines injected by a
+# tool are removed rather than argued about at commit-msg time.
+
+set -uo pipefail
+
+MSG_FILE="$1"
+SOURCE="${2:-}"
+[ -f "$MSG_FILE" ] || exit 0
+
+# Do not touch merges, squashes, or messages supplied wholesale.
+case "$SOURCE" in
+  merge|squash|commit) exit 0 ;;
+esac
+
+REPO="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+
+# ------------------------------------------------- strip attribution lines
+TMP="$(mktemp)"
+grep -viE '^(🤖 )?generated with|^co-authored-by: *(claude|cursor|copilot|chatgpt|gpt|gemini|ai)|^authored by an ai' \
+  "$MSG_FILE" > "$TMP" 2>/dev/null || cp "$MSG_FILE" "$TMP"
+# Collapse trailing blank lines left behind.
+awk 'BEGIN{n=0} {lines[NR]=$0} END{last=NR; while (last>0 && lines[last] ~ /^[[:space:]]*$/) last--; for(i=1;i<=last;i++) print lines[i]}' \
+  "$TMP" > "${TMP}.2" && mv "${TMP}.2" "$MSG_FILE"
+rm -f "$TMP"
+
+# ------------------------------------------------- prepend the active task
+SUBJECT="$(grep -v '^#' "$MSG_FILE" | sed '/^[[:space:]]*$/d' | head -1)"
+
+# Already referenced? Leave it alone.
+if printf '%s' "$SUBJECT" | grep -qE '^([A-Z][A-Z0-9]+-[0-9]+|F[0-9]+-T[0-9]+)[: ]'; then
+  exit 0
+fi
+
+SCOPE="${REPO}/.work.flutter/touch-scope"
+TASK=""
+[ -f "$SCOPE" ] && TASK="$(grep -oE '"task" *: *"[^"]+"' "$SCOPE" 2>/dev/null | sed 's/.*: *"//; s/"$//')"
+
+# Fall back to the in-progress task in the iteration block.
+if [ -z "$TASK" ] || [ "$TASK" = "null" ]; then
+  NEXT="${REPO}/.work.flutter/plans/NEXT_FLUTTER.md"
+  [ -f "$NEXT" ] && TASK="$(grep -E '^\| *F[0-9]+-T[0-9]+ *\|.*\| *in progress *\|' "$NEXT" 2>/dev/null \
+                            | head -1 | awk -F'|' '{gsub(/ /,"",$2); print $2}')"
+fi
+
+[ -z "$TASK" ] && exit 0
+[ "$TASK" = "null" ] && exit 0
+
+TMP="$(mktemp)"
+{
+  printf '%s: %s\n' "$TASK" "$SUBJECT"
+  grep -v '^#' "$MSG_FILE" | sed '/^[[:space:]]*$/d' | tail -n +2
+  printf '\n'
+  grep '^#' "$MSG_FILE" || true
+} > "$TMP" && mv "$TMP" "$MSG_FILE"
+
+exit 0

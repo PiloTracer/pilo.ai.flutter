@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# FLUTTER_AGENT_OS_HOOK
+# pre-push: runs the test suite before work leaves the machine.
+#
+# This is the last cheap place to catch a break. After the push it is CI's
+# problem, and CI's feedback loop is measured in minutes.
+
+set -uo pipefail
+
+AOS_ROOT="__FLUTTER_AGENT_OS_ROOT__"
+REPO="$(git rev-parse --show-toplevel)"
+cd "$REPO" || exit 0
+
+REMOTE_REF="${2:-}"
+case "$REMOTE_REF" in
+  *main|*master)
+    printf 'pre-push: pushing to a protected branch\n' ;;
+esac
+
+if ! command -v flutter >/dev/null 2>&1; then
+  printf 'pre-push: flutter not on PATH — tests NOT run (unverified, not passed)\n' >&2
+  exit 0
+fi
+
+printf 'pre-push: running tests\n'
+OUT="$(flutter test --no-pub 2>&1)"
+CODE=$?
+
+if [ "$CODE" -ne 0 ]; then
+  printf '%s\n' "$OUT" | tail -30 >&2
+  cat >&2 <<'EOF'
+
+pre-push BLOCKED: tests are failing.
+
+Fix the code. Do not delete, skip or weaken the test to get past this —
+that converts a visible failure into an invisible one.
+EOF
+  exit 1
+fi
+
+printf '%s\n' "$OUT" | grep -E 'All tests passed|[0-9]+ tests? passed' | tail -1
+printf 'pre-push ok\n'
+
+LOCAL="$(dirname "$0")/pre-push.local"
+[ -x "$LOCAL" ] && exec "$LOCAL" "$@"
+
+exit 0

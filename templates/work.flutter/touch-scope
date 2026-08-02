@@ -1,0 +1,18 @@
+{
+  "_comment": "Declared file scope for the active task. Written by @flutter-implementation at task start; read by the pre-commit hook to detect out-of-scope edits. An empty allow list means no active task, and the hook only warns.",
+  "task": null,
+  "iteration": null,
+  "declared_at": null,
+  "allow": [],
+  "deny": [
+    "**/*.jks",
+    "**/*.keystore",
+    "**/*.p12",
+    "**/*.mobileprovision",
+    "**/key.properties",
+    "**/.env",
+    "**/.env.*",
+    "**/service-account*.json"
+  ],
+  "notes": "Out-of-scope edits are reported, not silently allowed. Widening the scope is a decision recorded in the iteration block, not an edit to this file made to quiet the hook."
+}

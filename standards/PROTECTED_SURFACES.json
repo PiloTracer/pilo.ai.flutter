@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "description": "Machine-readable high-blast-radius paths for Flutter Agent OS. Read by scripts/blast-radius-check.sh, the pre-commit hook, @flutter-verify and @flutter-implementation. Framework defaults below; consumer repos extend the consumer_* arrays in their project copy at {FLUTTER_STANDARDS_ROOT}/PROTECTED_SURFACES.json.",
+  "rule": "fail_verify_without_explicit_human_approval_in_the_same_message",
+  "framework_paths": [
+    "templates/cursorrules.template",
+    "templates/bootstrap.sh",
+    "skills/SKILL_DEPENDENCIES.md",
+    "skills/probe-protocol.md",
+    "skills/README.md",
+    "standards/PROTECTED_SURFACES.json",
+    "scripts/framework-verify.sh",
+    "scripts/install-git-hooks.sh",
+    "scripts/deploy-basic.sh",
+    "scripts/deploy-files.sh",
+    "scripts/deploy-repo.sh",
+    "hooks/pre-commit",
+    "hooks/commit-msg",
+    "hooks/pre-push"
+  ],
+  "framework_patterns": [
+    "scripts/*.sh",
+    "templates/work.flutter/**",
+    "standards/2*-*.md"
+  ],
+  "consumer_paths": [
+    "pubspec.yaml",
+    "pubspec.lock",
+    "analysis_options.yaml",
+    "DOCS_FLUTTER_STACK.md",
+    ".cursorrules",
+    "lib/main.dart",
+    "lib/bootstrap.dart",
+    "lib/flavors.dart",
+    "lib/core/di/",
+    "lib/core/router/",
+    "lib/core/error/",
+    "lib/core/storage/"
+  ],
+  "consumer_patterns": [
+    "android/app/build.gradle*",
+    "android/app/src/*/AndroidManifest.xml",
+    "android/app/proguard-rules.pro",
+    "android/key.properties",
+    "ios/Runner/Info.plist",
+    "ios/Runner.xcodeproj/**",
+    "ios/Podfile",
+    "ios/Runner/*.entitlements",
+    "macos/Runner/*.entitlements",
+    "web/index.html",
+    ".github/workflows/*.yml",
+    ".gitlab-ci.yml",
+    "**/migrations/**",
+    "**/*_migration*.dart",
+    "**/firebase_options.dart"
+  ],
+  "never_commit_patterns": [
+    "**/*.jks",
+    "**/*.keystore",
+    "**/*.p12",
+    "**/*.mobileprovision",
+    "**/*.cer",
+    "**/*.pem",
+    "**/key.properties",
+    "**/google-services.json",
+    "**/GoogleService-Info.plist",
+    "**/.env",
+    "**/.env.*",
+    "**/service-account*.json",
+    "**/secrets*.yaml"
+  ],
+  "notes": {
+    "framework_paths": "Changing these changes behaviour for every repo the framework is installed into.",
+    "consumer_paths": "Application entry points and cross-cutting wiring. A defect here affects every feature.",
+    "consumer_patterns": "Native build, manifest, signing, CI and migration surfaces. Failures here are release-blocking or data-destroying and are usually invisible in a Dart-only review.",
+    "never_commit_patterns": "Signing material and credentials. Presence in a diff is a blocker regardless of approval; some entries (google-services.json, firebase_options.dart) are project decisions and may be intentionally committed - if so, remove them from this list in the project copy and record why.",
+    "migrations": "Local-store migrations are protected because a defect destroys user data irreversibly on devices you do not control."
+  },
+  "thresholds": {
+    "max_lines_warn": 200,
+    "max_lines_fail": 600,
+    "max_files_warn": 15,
+    "max_files_fail": 40,
+    "max_areas_warn": 2,
+    "max_areas_fail": 3,
+    "areas": [
+      "lib/core",
+      "lib/features",
+      "android",
+      "ios",
+      "web",
+      "test",
+      "integration_test",
+      ".github",
+      ".work.flutter"
+    ]
+  }
+}
