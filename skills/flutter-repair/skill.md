@@ -34,7 +34,7 @@ Repair is where agents most often make things worse: by treating the symptom, by
 
 | Mode | Repairs |
 |------|---------|
-| `repair - from <source>` | Findings from the named verifier: `milestone`, `uncommitted`, `last`, `gate`, `test`, `a11y`, `security`, `perf`, `data-audit`, `stack-audit` |
+| `repair - from <source>` | Findings from the named verifier: `milestone`, `uncommitted`, `last`, `gate`, `test`, `a11y`, `security`, `perf`, `data-audit`, `stack-audit`, `concept` |
 | `repair - <free-text>` | An operator-stated problem; runs an alignment map first |
 | `repair - <finding-id>` | A single finding by id |
 | `status` | Read-only: outstanding findings, repair history, what was deferred |
@@ -59,6 +59,7 @@ Repair is where agents most often make things worse: by treating the symptom, by
 | "the analyzer is complaining" | `@flutter-verify gate` |
 | "review found problems" | `@flutter-verify milestone` |
 | "it's not accessible" | `@flutter-a11y audit` |
+| "it looks cheap / basic" | `@flutter-concept-run run - FLS-13` |
 | "it's slow" | `@flutter-perf audit` then `profile` |
 | "we're leaking something" | `@flutter-security audit` |
 | "data is wrong after upgrade" | `@flutter-data verify` |
@@ -138,6 +139,7 @@ For each finding:
 | `from security` | `@flutter-security audit` (the same area) |
 | `from perf` | `@flutter-perf` — the **same mode on the same device**, so before and after are comparable |
 | `from data-audit` | `@flutter-data verify` |
+| `from concept` | The originating concept re-run on the same scope (`@flutter-concept-run run - FLS-<nn>`) |
 | free-text | The verifier chosen in R0-free |
 
 Quote the new exit code and verdict. **A repair is not complete until the originating verifier says so.**

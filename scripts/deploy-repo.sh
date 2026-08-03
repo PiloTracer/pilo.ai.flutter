@@ -61,7 +61,7 @@ else
   echo "  cloned and pinned at ${PINNED} (.git removed — the framework is now part of this repo's history)"
 fi
 
-rm -rf "${DEST}/.work.flutter" "${DEST}/TMP" 2>/dev/null || true
+rm -rf "${DEST}/.work.flutter" "${DEST}/TMP" "${DEST}/plans" 2>/dev/null || true
 find "${DEST}/scripts" "${DEST}/hooks" "${DEST}/templates" -type f \
      \( -name '*.sh' -o -name 'pre-*' -o -name 'commit-*' -o -name 'post-*' -o -name 'prepare-*' \) \
      -exec chmod +x {} + 2>/dev/null || true

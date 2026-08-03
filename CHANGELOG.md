@@ -23,6 +23,11 @@ The framework verified that apps were *correct*; it never checked whether they *
 ### Fixed — pre-commit hook (2026-08-02)
 - **`hooks/pre-commit` hygiene step exempts `scripts/fixtures/`.** The fixtures are deliberately-broken verifier test data whose gate is `self-test.sh`; without the exemption, any commit touching them blocked on their intended BLOCKERs — the framework could not commit its own fixtures
 
+### Fixed — consistency gaps from the UI-craft review (2026-08-02)
+- **`flutter-repair` gains the `from concept` source.** `flutter-concept-run` and the director's `ui-craft` bucket both routed there, but the skill never listed it — a dead route. The R4 re-verify map now re-runs the originating concept, and the open-language map routes "it looks cheap / basic" to FLS-13
+- **`flutter-verify` Q7 fails on BLOCKER hygiene hits only; MAJOR/MINOR are routed findings.** "Any hit" predated the UI-craft scans and contradicted the pre-commit hook and `.quick/gates.md` ("blockers yes, notes no") — a waivable MAJOR could not have stayed non-blocking at the milestone gate
+- **`deploy-repo.sh` no longer carries `plans/` into targets.** `deploy-files.sh` never copied it; the clone-based mode did. Both bundles are now identical in what they exclude
+
 ### Fixed — framework test-run against OfficeToolCombo (2026-08-02)
 - **`readiness-verify.sh` false FAIL on `L1`-style ledger ids.** Entry rows like `| L1 |` were counted as zero questions; bare integers and a single letter prefix are both accepted
 - **`probe-protocol.md` ledger shape** now matches the machine-checked template (Score + Q&A table), not a divergent Status/Conf sketch

@@ -67,7 +67,7 @@ The same commands CI runs. Take them from `DOCS_FLUTTER_STACK.md`; the shapes be
 | Q4 | Codegen current | `dart run build_runner build --delete-conflicting-outputs` then check for a diff in generated files | generated output differs from committed |
 | Q5 | Tests | `flutter test --coverage` | any failure |
 | Q6 | Coverage floor | Coverage on `lib/src/` excluding generated ≥ the project floor | below floor |
-| Q7 | Hygiene | `bash scripts/dart-hygiene-check.sh` | any hit |
+| Q7 | Hygiene | `bash scripts/dart-hygiene-check.sh` | any BLOCKER hit; MAJOR/MINOR are routed findings, not gate failures |
 | Q8 | Dependency health | `flutter pub outdated` (report), `dart pub deps` (conflicts) | a direct dependency with a known advisory |
 
 **Report:** one line per check with the exit code, then `gate: PASS` or `gate: FAIL`. No prose.
