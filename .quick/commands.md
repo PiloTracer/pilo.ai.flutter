@@ -9,7 +9,7 @@ Every invocation, by skill. Argument form is `@skill mode - argument`.
 ```
 @flutter-director - <free text>            classify, chain, confirm, execute
 @flutter-director status                   readiness snapshot
-@flutter-director review - <chain>         critique a proposed route
+@flutter-director review-routing           read-only routing-confidence report
 
 @flutter-router - <question>               ≤3 sentences + citation, read-only
 @flutter-router help                       what exists and where
@@ -102,7 +102,7 @@ Every invocation, by skill. Argument form is `@skill mode - argument`.
 ## Repair
 
 ```
-@flutter-repair repair - from <analyze|test|verify|FLS-nn|operator>
+@flutter-repair repair - from <milestone|uncommitted|last|gate|test|a11y|security|perf|data-audit|stack-audit|concept>
 @flutter-doctor diagnose                   classify first, always
 @flutter-doctor env|deps|build|codegen|clean
 ```

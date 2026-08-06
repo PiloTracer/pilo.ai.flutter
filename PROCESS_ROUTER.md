@@ -62,7 +62,7 @@ For free-text requests use `@flutter-director - <request>`. For questions use `@
 | "Skill says prerequisites not met" | Read its blocked report | It names the missing artifact and the skill that produces it |
 | Gradle / CocoaPods / `pub get` failure | `@flutter-doctor deps` | Toolchain, not code |
 | `build_runner` conflict or stale output | `@flutter-doctor codegen` | Codegen currency |
-| Analyzer errors after a merge | `@flutter-repair repair - from analyze` | |
+| Analyzer errors after a merge | `@flutter-repair repair - from gate` | Analyzer findings surface at the mechanical gate |
 | Tests red | `@flutter-repair repair - from test` | Never delete or skip the test |
 | Golden test failing | `@flutter-test golden` | Review the diff. Do **not** reflexively `--update-goldens` |
 | UI janks | `@flutter-perf audit` → `profile` | Hypothesis, then measurement |

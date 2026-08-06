@@ -61,7 +61,7 @@ Copy the framework into `<target>/.ai.flutter/` (or a confirmed alternative path
 
 **Copied:** `skills/`, `standards/`, `concepts/`, `templates/`, `scripts/`, `hooks/`, `stacks/`, `resources/`, `docs/`, `.quick/`, entry points, `LICENSE`.
 
-**Never copied:** the framework's own `.git`, its `.work.flutter/`, scratch and temp directories, anything in the framework's `.gitignore`.
+**Never copied:** the framework's own `.git`, its `.work.flutter/`, `plans/`, repo meta (`.github/`, `.vscode/`, the framework's own `.cursorrules` and `.gitignore`), scratch and temp directories, anything in the framework's `.gitignore`.
 
 Then write the pointer with `Mode: files`, register in `.cursorrules`, ensure scripts are executable, and verify.
 

@@ -29,6 +29,9 @@ Thumbs.db
 .idea/
 *.iml
 
+# Agent tooling session state (local permission cache, not framework content)
+reasonix.toml
+
 # Python bytecode (verifier fixtures)
 __pycache__/
 *.pyc

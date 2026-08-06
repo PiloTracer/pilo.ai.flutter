@@ -141,7 +141,7 @@ Creating and editing files inside the declared task scope is allowed. Prefer rev
 ## Git
 
 - Commit and push only under the rule above.
-- No `Co-authored-by:` trailers and no AI attribution. The `commit-msg` hook rejects them.
+- No AI attribution and no tool co-author trailers. The `commit-msg` hook rejects them.
 - Subject line: `type: description` (`feat` / `fix` / `docs` / `refactor` / `chore`), imperative mood, at most 72 characters.
 - Install the hooks: `bash scripts/install-git-hooks.sh`.
 

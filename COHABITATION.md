@@ -16,7 +16,7 @@ The failure mode being prevented is specific: two frameworks writing the same fi
 | Pointer | `.work.flutter/plans/NEXT_FLUTTER.md` | `.work/plans/NEXT.md` | `.work.ui/plans/NEXT_UI.md` |
 | Concepts | `FLS-nn` | `MOD-nn` | `UIS-nn` |
 | Director | `@flutter-director` | `@ai-director` | `@ui-director` |
-| Standards prefix | `standards/*FLUTTER*`, Flutter-scoped | general | UI-scoped |
+| Standards | `standards/` directory (date-prefixed, Flutter-scoped) | general | UI-scoped |
 
 No skill id, work path, concept id, or artifact name collides. This is enforced by `framework-verify.sh`, which fails if a Flutter skill references another framework's paths as its own.
 
@@ -35,7 +35,7 @@ No skill id, work path, concept id, or artifact name collides. This is enforced 
 | Theming | `.ai.ui` decides the tokens. Flutter implements them in `ThemeData`. `THEMING_STANDARD` defers to the design system where one exists |
 | Component specs | `.ai.ui` writes the spec. `@flutter-implementation` builds the widget. `@flutter-a11y` verifies it |
 | API contracts | `.ai` owns the server contract. `@flutter-data` owns the client side and maps the wire format at the boundary |
-| CI | `.ai` owns the pipeline. `@flutter-release ci` contributes the Flutter jobs |
+| CI | `.ai` owns the pipeline. `@flutter-release prepare` contributes the Flutter jobs |
 | Accessibility | Both care. `.ai.ui` sets the design-side requirement; `@flutter-a11y` verifies the running app. The app is where it is real |
 
 ---

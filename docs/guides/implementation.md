@@ -89,7 +89,7 @@ Genuinely need to widen scope? Say so, get agreement, update `touch-scope`. Wide
 
 The SPEC is the contract. Two sections cause almost all the rework.
 
-**§6 — the six states.** Loading, empty, content, error, partial, offline. The happy path is easy and is never where features fail. A surface that only handles content is a surface that will show a blank screen to a user on a bad connection.
+**§6 — the six states.** Loading, empty, success, error, partial, offline. The happy path is easy and is never where features fail. A surface that only handles success is a surface that will show a blank screen to a user on a bad connection.
 
 **§9 — error handling.** Every failure has a user-visible outcome. A failure that only logs is, from the user's side, the app doing nothing.
 

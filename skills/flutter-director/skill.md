@@ -190,7 +190,7 @@ Map the bucket to a chain. Respect the dependency graph; when a prerequisite is 
           → @flutter-plan-master greenfield
             → @flutter-plan-master probe → integrity → status  (implementation-ready)
               → @flutter-scaffold app
-                → @flutter-session start
+                → @flutter-session open
                   → @flutter-implementation plan - F1
                     → @flutter-implementation start / continue  (loop)
                       → @flutter-verify milestone

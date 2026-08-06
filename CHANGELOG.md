@@ -6,11 +6,11 @@ The deploy skills (`@flutter-deploy-basic`, `@flutter-deploy-files`, `@flutter-d
 
 ---
 
-## [Unreleased]
+## [0.2.0] — 2026-08-06
 
 ### Breaking — deploy skills split by install mode; session git scoped to `.work.flutter/` (2026-08-03)
 
-- **`flutter-deploy` is split into three mode-owned skills:** `flutter-deploy-basic` (thin pointer install), `flutter-deploy-files` (fat self-contained copy), `flutter-deploy-repo` (pinned clone/archive/submodule). Each keeps the lifecycle modes for its own install type: `verify`, `uninstall`, `status`, and `update` — which **also accepts `--update`** as an identical alias, so `@flutter-deploy-basic update - <target>` and `@flutter-deploy-basic --update - <target>` both work. The old `flutter-deploy` skill id no longer resolves (it is split into the three above); targets with a `Mode: basic` pointer migrate to `@flutter-deploy-basic update`, `Mode: files` to `@flutter-deploy-files update`, `Mode: repo` to `@flutter-deploy-repo update`. The `deploy-basic.sh` / `deploy-files.sh` / `deploy-repo.sh` scripts are unchanged in name and now print the matching new skill in their update and verify messages.
+- **`flutter-deploy` is split into three mode-owned skills:** `flutter-deploy-basic` (thin pointer install), `flutter-deploy-files` (fat self-contained copy), `flutter-deploy-repo` (pinned clone/archive/submodule). Each keeps the lifecycle modes for its own install type: `verify`, `uninstall`, `status`, and `update` — which **also accepts `--update`** as an identical alias, so `@flutter-deploy-basic update - <target>` and `@flutter-deploy-basic --update - <target>` both work. The old `flutter-deploy` skill id no longer resolves (it is split into the three above); targets with a `Mode: basic` pointer migrate to `@flutter-deploy-basic update`, `Mode: files` to `@flutter-deploy-files update`, `Mode: repo` to `@flutter-deploy-repo update`. The `deploy-basic.sh` / `deploy-files.sh` / `deploy-repo.sh` scripts are unchanged in name and now print the matching new skill in their update messages.
 - **`flutter-session` git is scoped to the working directory.** `commit` stages and commits only `.work.flutter/` paths — never app code or files outside the project memory tree; `push` sends the current branch (which may already carry app-code commits from other actors) without `--force`. `close`, `commit` and `push` combine in any order (execution is always close → commit → push), and `commit` includes new untracked files/dirs under `.work.flutter/` (gitignored scratch such as `.work.flutter/analysis/tmp/` stays ignored). `push` commits pending `.work.flutter/` state first when needed, never force-pushes, and reports when no remote exists.
 
 ### Added — UI craft: teach it, wire it, enforce it (2026-08-02)
@@ -44,7 +44,21 @@ The framework verified that apps were *correct*; it never checked whether they *
 - **`dart-hygiene-check.sh`:** skip layer-boundary rules under `test/`; allow `*_providers.dart` / `di/` as composition roots
 - **`hooks/pre-push`:** framework repo runs `framework-verify` + `self-test` instead of `flutter test` (there is no app `test/` here); adopter repos without a test tree report `unverified` instead of a false block
 
-## [1.0.1] — 2026-08-02
+### Fixed — pre-release consistency audit (2026-08-06)
+
+A full cross-document sweep before tagging this release. Two real script defects; the rest is stale documentation corrected to match the code.
+
+- **Deploy scripts left `REPLACE:FLUTTER_SNIPPET_BLOCK` unexpanded on fresh installs.** All three deploy scripts copied `cursorrules.flutter.template` verbatim when the target had no `.cursorrules`, so the `FLUTTER_AGENT_OS_BEGIN/END` marker block never landed and the framework-path substitution had nothing to bind to — `verify` and `uninstall` could not find the registered block. The scripts now expand the snippet the same way `templates/bootstrap.sh` does
+- **`deploy-repo.sh` clone installs now exclude the same paths as the fat install.** `.github/`, `.vscode/`, and the framework's own `.cursorrules` and `.gitignore` were carried by clone mode but never by `deploy-files.sh`; both modes now produce identical trees. `--submodule` installs are the documented exception: exclusions cannot be applied without dirtying the submodule, so they carry the full tracked tree
+- **`QUALITY_GATES` G3 realigned to the actual D1–D15.** The table claimed to be the fifteen dimensions of `@flutter-verify milestone` but listed File placement, Docs and l10n instead of Requirement coverage (D1), Mechanical gate (D9) and Scope discipline (D10)
+- **Dead routes and modes corrected.** `flutter-session start` → `open` (director chain, dependency matrix, canonical verb table); `flutter-concept-run run-all` removed (`run - <scope>` already selects-then-runs); `@flutter-release ci` → `prepare`; `@flutter-director review` → `review-routing`; the repair source grammar in `docs/guides/repair.md` and `.quick/commands.md` now matches the skill (`analyze` / `verify` / `FLS-nn` / `operator` were never valid sources); analyzer-error routing now uses `from gate`
+- **README skill count** corrected to 27 after the deploy split; the resources row now lists `ui-craft.md`; the verifier enumeration names FLS registration
+- **Six-state naming drift:** the happy-path state is `Success` everywhere (two docs said "content")
+- **`templates/work.flutter/STACK.md`** linked to `../standards/`, which does not resolve from the deployed `.work.flutter/STACK.md`; now `standards/`
+- **COHABITATION.md** no longer claims a `standards/*FLUTTER*` filename prefix — standards are namespaced by directory
+- **`.cursorrules`** no longer claims the `commit-msg` hook rejects all `Co-authored-by:` trailers — it rejects AI attribution and tool co-author trailers, matching the hook and the adopter template
+
+## [0.1.1] — 2026-08-02
 
 Ecosystem corrections. Several widely-repeated pieces of Flutter advice are now false, and a framework that repeats them teaches an agent to write code that does not compile, CI steps that do not run, and triage that changes the wrong files. Everything here is a correction to a factual claim, not a design change.
 
@@ -69,7 +83,7 @@ The catalog's refusal policy was principled but abstract. It now names the packa
 
 ---
 
-## [1.0.0] — 2026-08-01
+## [0.1.0] — 2026-08-01
 
 First release. Complete framework: plan, build, verify, repair.
 
@@ -130,4 +144,4 @@ Shared probe protocol with an adaptive coverage loop and a challenge pass that a
 - Readiness states: `scaffold → stack-locked → foundation-complete → plan-ready → implementation-ready → release-ready`
 - No package versions are pinned anywhere. Verification against pub.dev at time of use is mandatory, because a pinned version in documentation is stale the week after it is written
 
-[1.0.0]: https://semver.org/
+[0.2.0]: https://github.com/PiloTracer/pilo.ai.flutter/releases/tag/v0.2.0

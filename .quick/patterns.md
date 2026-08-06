@@ -12,7 +12,7 @@ Every surface backed by data expresses all six. Five of them are where the bugs 
 |-------|------------|
 | Loading | An indicator; no layout jump when it resolves |
 | Empty | Explains why it is empty and what to do about it |
-| Content | The happy path |
+| Success | The happy path |
 | Error | Says what failed, in user language, with a way forward |
 | Partial | Some data, some missing — stale cache, partial fetch |
 | Offline | Distinguished from error; says what still works |

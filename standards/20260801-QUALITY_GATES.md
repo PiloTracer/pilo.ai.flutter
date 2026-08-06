@@ -54,20 +54,20 @@ G1, plus:
 
 ## 4. G3 — Milestone gate
 
-G2, plus the fifteen dimensions of `@flutter-verify milestone`:
+G2, plus the fifteen dimensions of `@flutter-verify milestone` (D1–D15, defined in `skills/flutter-verify/skill.md`):
 
 | # | Dimension | Pass condition |
 |---|-----------|----------------|
-| 1 | SPEC conformance | Every acceptance criterion demonstrably met, each with evidence |
-| 2 | File placement | Matches DIRECTORY_MAP |
+| 1 | Requirement coverage | Every FR/NFR traced to this milestone is implemented |
+| 2 | SPEC conformance | Every acceptance criterion demonstrably met, each with evidence |
 | 3 | UI states | All six states implemented per SPEC §6 |
 | 4 | Architecture | Layer direction holds; no cross-layer leaks (FLS-03) |
 | 5 | State management | Stack idioms followed; disposal correct; no rebuild storms (FLS-02) |
 | 6 | Error handling | Every failure typed, surfaced and tested (FLS-04) |
 | 7 | Data integrity | Nullability, migrations, cache policy, offline behaviour (FLS-09) |
-| 8 | Tests | The planned test types exist and pass; coverage floor met; no drop |
-| 9 | Docs | SPEC status updated; ADRs written; registries appended |
-| 10 | l10n | No hardcoded user-visible strings; new keys in every locale |
+| 8 | Test coverage | The planned test types exist and pass; coverage floor met; no drop |
+| 9 | Mechanical gate | The `gate` protocol (Q1–Q8) runs clean on the diff |
+| 10 | Scope discipline | The diff stays inside the declared iteration scope; `touch-scope-verify.sh` clean |
 | 11 | Security | `@flutter-security audit` clean on the diff (FLS-11) |
 | 12 | Accessibility | `@flutter-a11y audit` on changed P0 screens (FLS-10) |
 | 13 | Performance | NFR budgets held where an NFR applies (FLS-01, FLS-08) |

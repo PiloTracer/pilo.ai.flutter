@@ -35,7 +35,7 @@ Symptom → likely cause → skill. Classify before acting; the wrong classifica
 
 | Symptom | Do |
 |---------|-----|
-| Analyzer errors after a merge | `@flutter-repair repair - from analyze` |
+| Analyzer errors after a merge | `@flutter-repair repair - from gate` |
 | Tests fail after a refactor | `@flutter-repair repair - from test`. Fix the code, not the test — unless the test encoded the old behaviour, in which case say so explicitly |
 | Test passes alone, fails in the suite | Shared state or order dependence. Both are test bugs |
 | Flaky test | Real timing dependency. **Do not retry it away** |

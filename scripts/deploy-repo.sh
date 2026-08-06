@@ -58,10 +58,14 @@ else
   [ -n "$REF" ] && ( cd "$DEST" && git checkout --quiet --detach "$REF" )
   PINNED="$( cd "$DEST" && git rev-parse --short HEAD )"
   rm -rf "${DEST}/.git"
+  # Exclude exactly what deploy-files.sh never copies, so the two bundles
+  # match. Submodule installs skip this: deleting tracked files would leave
+  # the submodule permanently dirty, so they carry the full tracked tree.
+  rm -rf "${DEST}/.work.flutter" "${DEST}/TMP" "${DEST}/plans" \
+         "${DEST}/.github" "${DEST}/.vscode" "${DEST}/.cursorrules" "${DEST}/.gitignore" 2>/dev/null || true
   echo "  cloned and pinned at ${PINNED} (.git removed — the framework is now part of this repo's history)"
 fi
 
-rm -rf "${DEST}/.work.flutter" "${DEST}/TMP" "${DEST}/plans" 2>/dev/null || true
 find "${DEST}/scripts" "${DEST}/hooks" "${DEST}/templates" -type f \
      \( -name '*.sh' -o -name 'pre-*' -o -name 'commit-*' -o -name 'post-*' -o -name 'prepare-*' \) \
      -exec chmod +x {} + 2>/dev/null || true
@@ -99,6 +103,16 @@ if [ ! -f "$CR" ]; then
   cp "${DEST}/templates/cursorrules.flutter.template" "$CR"
 elif ! grep -q 'FLUTTER_AGENT_OS_BEGIN' "$CR" 2>/dev/null; then
   printf '\n\n' >> "$CR"; cat "$SNIPPET" >> "$CR"
+fi
+# A fresh .cursorrules copied from the full template still carries the
+# REPLACE:FLUTTER_SNIPPET_BLOCK token — expand it the same way
+# templates/bootstrap.sh does, or the marker block never lands.
+if grep -q 'REPLACE:FLUTTER_SNIPPET_BLOCK' "$CR"; then
+  tmp="$(mktemp)"
+  awk -v snip="$SNIPPET" '
+    /REPLACE:FLUTTER_SNIPPET_BLOCK/ { while ((getline line < snip) > 0) print line; next }
+    { print }
+  ' "$CR" > "$tmp" && mv "$tmp" "$CR"
 fi
 tmp="$(mktemp)"; sed "s|REPLACE:FLUTTER_FRAMEWORK_PATH|${INTO}|g" "$CR" > "$tmp" && mv "$tmp" "$CR"
 

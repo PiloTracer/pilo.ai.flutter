@@ -31,11 +31,11 @@ The framework is a set of **markdown protocols** any LLM can follow, plus **shel
 
 | Directory | Contents |
 |-----------|----------|
-| [`skills/`](skills/README.md) | 25 skills. Each has hard rules, modes, prerequisite gates, protocols and a completion checklist |
+| [`skills/`](skills/README.md) | 27 skills. Each has hard rules, modes, prerequisite gates, protocols and a completion checklist |
 | [`standards/`](standards/README.md) | 21 standards + protected surfaces. Templates that become project-binding once tokens are filled |
 | [`concepts/`](concepts/README.md) | FLS-01…FLS-13 review lenses, run against real diffs |
 | [`stacks/`](stacks/README.md) | Per-state-management idiom guides: Riverpod, Bloc, Provider, Signals |
-| [`resources/`](resources/README.md) | Vetted OSS package catalog with licences; Flutter CLI reference |
+| [`resources/`](resources/README.md) | Vetted OSS package catalog with licences; Flutter CLI reference; UI-craft evidence base |
 | [`templates/`](templates/) | What `@flutter-bootstrap init` writes into a repo |
 | [`scripts/`](scripts/README.md) | Mechanical verifiers and installers |
 | [`hooks/`](hooks/) | Git hooks: pre-commit, commit-msg, prepare-commit-msg, post-commit, pre-push |
@@ -117,4 +117,4 @@ Designed to sit beside [Agent OS](../.ai) (`.ai`) and [UI Design OS](../.ai.ui) 
 
 ## Contributing
 
-[`CONTRIBUTING.md`](CONTRIBUTING.md). Every change runs two suites: `framework-verify.sh` machine-checks registration, frontmatter, context budgets, internal links, `@skill` route resolution and path discipline; `self-test.sh` runs the verifiers against known-good and known-bad fixtures, so a check that has quietly stopped catching things fails rather than reassures.
+[`CONTRIBUTING.md`](CONTRIBUTING.md). Every change runs two suites: `framework-verify.sh` machine-checks skill and FLS registration, frontmatter, context budgets, internal links, `@skill` route resolution and path discipline; `self-test.sh` runs the verifiers against known-good and known-bad fixtures, so a check that has quietly stopped catching things fails rather than reassures.

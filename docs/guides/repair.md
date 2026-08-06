@@ -27,7 +27,7 @@ Fixing what verification found, without creating the next finding.
 ## The repair protocol
 
 ```
-@flutter-repair repair - from <analyze|test|verify|FLS-nn|operator>
+@flutter-repair repair - from <milestone|uncommitted|last|gate|test|a11y|security|perf|data-audit|stack-audit|concept>
 ```
 
 **1. Build the findings table.** Every finding, with its location and severity. Repairing from memory means repairing some of them.

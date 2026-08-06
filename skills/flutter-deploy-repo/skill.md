@@ -63,11 +63,11 @@ Clone or unpack the framework into `<target>/.ai.flutter/` (or a confirmed alter
 
 **Copied:** `skills/`, `standards/`, `concepts/`, `templates/`, `scripts/`, `hooks/`, `stacks/`, `resources/`, `docs/`, `.quick/`, entry points, `LICENSE`.
 
-**Never carried:** the framework's own `.git` (removed after a clone), `plans/`, its `.work.flutter/`, scratch and temp directories, anything in the framework's `.gitignore`. The clone and the fat install must exclude the same paths, so a target that switches modes does not silently gain or lose files.
+**Never carried:** the framework's own `.git` (removed after a clone), `plans/`, repo meta (`.github/`, `.vscode/`, the framework's own `.cursorrules` and `.gitignore`), its `.work.flutter/`, scratch and temp directories, anything in the framework's `.gitignore`. A `--submodule` install is the exception: exclusions cannot be applied without dirtying the submodule, so it carries the full tracked tree. Otherwise the clone and the fat install exclude the same paths, so a target that switches modes does not silently gain or lose files.
 
 Then write the pointer with `Mode: repo` and the pinned revision, register in `.cursorrules`, and verify.
 
-**Before writing, check for collisions.** Any existing file at a destination path is reported and left alone unless the operator confirms replacement, file by file.
+**Before writing, check for collisions.** If the destination path already exists, the install refuses and points at `update` — it never merges into an existing tree.
 
 ---
 

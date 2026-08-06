@@ -10,7 +10,7 @@ locked-date: —
 
 Once locked, this file is **binding**. Skills generate code against it. Changing a locked dimension after implementation begins is a re-architecture: it requires an ADR and a migration plan, not an edit.
 
-Every package must be free, open source and commercial-use-permitted — [`PACKAGE_LICENSE_STANDARD`](../standards/20260801-PACKAGE_LICENSE_STANDARD.md). Versions are **verified on pub.dev** at lock time, never recalled from memory.
+Every package must be free, open source and commercial-use-permitted — [`PACKAGE_LICENSE_STANDARD`](standards/20260801-PACKAGE_LICENSE_STANDARD.md). Versions are **verified on pub.dev** at lock time, never recalled from memory.
 
 ---
 

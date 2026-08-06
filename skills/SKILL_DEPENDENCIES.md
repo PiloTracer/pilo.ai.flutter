@@ -89,8 +89,8 @@ foundation-complete → plan-ready → implementation-ready → release-ready
 | **flutter-stack** `set` | `{FLUTTER_HANDOFF}` present (SK0 gate) | **Recommended:** `@flutter-bootstrap init` |
 | **flutter-stack** `probe` | `{FLUTTER_HANDOFF}` present | - (7 stack dimensions, ≤5 questions/pass) |
 | **flutter-stack** `status` / `show` | - | Read-only |
-| **flutter-session** `start` | `{FLUTTER_HANDOFF}` (offer bootstrap if missing) | **Recommended:** `@flutter-bootstrap init` |
-| **flutter-session** `close` | Prior `start` or dirty tree | - (may combine with `commit` / `push`) |
+| **flutter-session** `open` | `{FLUTTER_HANDOFF}` (offer bootstrap if missing) | **Recommended:** `@flutter-bootstrap init` |
+| **flutter-session** `close` | Prior `open` or dirty tree | - (may combine with `commit` / `push`) |
 | **flutter-session** `commit` | Dirty `.work.flutter/` (else report "nothing to commit") | - (scoped to `.work.flutter/`; includes untracked files/dirs) |
 | **flutter-session** `push` | Remote configured; pending `.work.flutter/` changes are committed first | - (scoped to `.work.flutter/`) |
 | **flutter-session** `context` / `status` | - | Read-only |
@@ -145,7 +145,7 @@ foundation-complete → plan-ready → implementation-ready → release-ready
 | **flutter-release** `certify` | All release gates green (**RL0** gate) | **Required** |
 | **flutter-release** `build` / `distribute` | **release-ready: yes** | **Required** |
 | **flutter-release** `prepare` / `status` | - | `prepare` writes flavor/signing/CI config; `status` read-only |
-| **flutter-concept-run** `run` / `run-all` | Applicable trigger (SPEC §16, iteration registry, diff scope) | Per [`concepts/README.md`](../concepts/README.md) |
+| **flutter-concept-run** `run` | Applicable trigger (SPEC §16, iteration registry, diff scope) | Per [`concepts/README.md`](../concepts/README.md) |
 | **flutter-concept-run** `list` / `status` | - | Read-only |
 | **flutter-docs** `create guide` / `create tutorial` / `create reference` | `{FLUTTER_DOCS_ROOT}` exists (created by `@flutter-bootstrap init`) | **Recommended:** `@flutter-bootstrap init` |
 | **flutter-docs** `status` | - | Read-only |
@@ -235,7 +235,8 @@ All skills use the same verbs where applicable, so muscle memory stays portable.
 | `approve` | Flip an artifact's status after a passing review | flutter-feature-spec |
 | `document` | Author docs for something that already exists (brownfield) | flutter-feature-spec, flutter-docs |
 | `plan` | Prepare the next unit of work | flutter-implementation, flutter-test |
-| `start` | Begin a unit of work | flutter-session, flutter-implementation |
+| `start` | Begin a unit of work | flutter-implementation |
+| `open` | Open a session: load context, confirm readiness, resume or begin | flutter-session |
 | `complete` | Mark a unit as done | flutter-implementation |
 | `close` | Wrap up + write handoff; may combine with `commit` / `push` | flutter-session |
 | `commit` | Git commit of `.work.flutter/` only (incl. new untracked files/dirs); no close | flutter-session |
@@ -248,7 +249,7 @@ All skills use the same verbs where applicable, so muscle memory stays portable.
 | `diagnose` | Toolchain/environment root-cause analysis | flutter-doctor |
 | `brownfield` | Discover/create missing artifacts from an existing repo | flutter-plan-verify, flutter-plan-repair |
 | `alignment` / `drift` | NEXT vs master-plan consistency | flutter-plan-verify (read-only), flutter-plan-repair (fix) |
-| `run` / `run-all` | Execute (tests / concept prompts) | flutter-test, flutter-concept-run |
+| `run` | Execute (tests / concept prompts) | flutter-test, flutter-concept-run |
 | `list` | Enumerate available items | flutter-concept-run |
 | `task` | Execute a single task by id | flutter-implementation |
 | `update` | Rules-aware merge of existing-but-differing files (never wholesale replace). The deploy skills also accept `--update` as an alias | flutter-deploy-basic, flutter-deploy-files, flutter-deploy-repo |

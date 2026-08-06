@@ -122,6 +122,16 @@ else
   echo "  append    .cursorrules"
 fi
 if [ "$DRY" -eq 0 ]; then
+  # A fresh .cursorrules copied from the full template still carries the
+  # REPLACE:FLUTTER_SNIPPET_BLOCK token — expand it the same way
+  # templates/bootstrap.sh does, or the marker block never lands.
+  if grep -q 'REPLACE:FLUTTER_SNIPPET_BLOCK' "$CR"; then
+    tmp="$(mktemp)"
+    awk -v snip="$SNIPPET" '
+      /REPLACE:FLUTTER_SNIPPET_BLOCK/ { while ((getline line < snip) > 0) print line; next }
+      { print }
+    ' "$CR" > "$tmp" && mv "$tmp" "$CR"
+  fi
   tmp="$(mktemp)"; sed "s|REPLACE:FLUTTER_FRAMEWORK_PATH|${INTO}|g" "$CR" > "$tmp" && mv "$tmp" "$CR"
 fi
 
