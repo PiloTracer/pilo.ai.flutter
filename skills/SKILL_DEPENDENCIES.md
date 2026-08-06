@@ -90,8 +90,9 @@ foundation-complete → plan-ready → implementation-ready → release-ready
 | **flutter-stack** `probe` | `{FLUTTER_HANDOFF}` present | - (7 stack dimensions, ≤5 questions/pass) |
 | **flutter-stack** `status` / `show` | - | Read-only |
 | **flutter-session** `start` | `{FLUTTER_HANDOFF}` (offer bootstrap if missing) | **Recommended:** `@flutter-bootstrap init` |
-| **flutter-session** `close` | Prior `start` or dirty tree | - |
-| **flutter-session** `commit` | Dirty tree | - |
+| **flutter-session** `close` | Prior `start` or dirty tree | - (may combine with `commit` / `push`) |
+| **flutter-session** `commit` | Dirty `.work.flutter/` (else report "nothing to commit") | - (scoped to `.work.flutter/`; includes untracked files/dirs) |
+| **flutter-session** `push` | Remote configured; pending `.work.flutter/` changes are committed first | - (scoped to `.work.flutter/`) |
 | **flutter-session** `context` / `status` | - | Read-only |
 | **flutter-foundation** `greenfield` | `.cursorrules` + `{FLUTTER_HANDOFF}` (**GF0** gate) | **Recommended:** `@flutter-bootstrap init` |
 | **flutter-foundation** `continue` | Prior foundation work started | - |
@@ -148,8 +149,9 @@ foundation-complete → plan-ready → implementation-ready → release-ready
 | **flutter-concept-run** `list` / `status` | - | Read-only |
 | **flutter-docs** `create guide` / `create tutorial` / `create reference` | `{FLUTTER_DOCS_ROOT}` exists (created by `@flutter-bootstrap init`) | **Recommended:** `@flutter-bootstrap init` |
 | **flutter-docs** `status` | - | Read-only |
-| **flutter-deploy** `basic` / `files` / `repo` / `update` | Target dir exists (**I0** gate); source framework root resolvable | - (no-overwrite by default) |
-| **flutter-deploy** `status` | - | Read-only |
+| **flutter-deploy-basic** `basic` / `update` / `--update` / `verify` / `uninstall` / `status` | Target dir exists (**I0** gate); source framework root resolvable; `update` / `--update` needs an existing install with `Mode: basic` | - (no-overwrite by default) |
+| **flutter-deploy-files** `files` / `update` / `--update` / `verify` / `uninstall` / `status` | Target dir exists (**I0** gate); source framework root resolvable; `update` / `--update` needs an existing install with `Mode: files` | - (no-overwrite by default) |
+| **flutter-deploy-repo** `repo` / `update` / `--update` / `verify` / `uninstall` / `status` | Target dir exists (**I0** gate); source framework root resolvable; git for `repo`; `update` / `--update` needs an existing install with `Mode: repo` | - (no-overwrite by default) |
 | **flutter-router** `- <question>` / `help` | - | Read-only. Never writes. |
 | **flutter-director** `- <free-text>` | Framework present with valid `skills/README.md`; `{FLUTTER_HANDOFF}` readable | **Recommended:** read `{FLUTTER_HANDOFF}` + `{FLUTTER_NEXT}` for routing context. **Confirm gate** before any skill invoke (skip with `-y`; render-only with `--dry-run`). Non-Flutter requests are channelled to `@x-director` / `@ai-director` after preflight. |
 | **flutter-director** `- <free-text> -y` | Same as above | Trust-mode: skips the Confirm gate |
@@ -235,8 +237,9 @@ All skills use the same verbs where applicable, so muscle memory stays portable.
 | `plan` | Prepare the next unit of work | flutter-implementation, flutter-test |
 | `start` | Begin a unit of work | flutter-session, flutter-implementation |
 | `complete` | Mark a unit as done | flutter-implementation |
-| `close` | Wrap up + write handoff | flutter-session |
-| `commit` | Git commit/push without closing the session | flutter-session |
+| `close` | Wrap up + write handoff; may combine with `commit` / `push` | flutter-session |
+| `commit` | Git commit of `.work.flutter/` only (incl. new untracked files/dirs); no close | flutter-session |
+| `push` | Commit pending `.work.flutter/` state (if any), then push to the remote; no close | flutter-session |
 | `context` | Read-only full context load, uncommitted-aware; no writes | flutter-session |
 | `verify` | Audit produced artifacts | flutter-plan-verify (`foundation`/`master`/`alignment`/`coverage`/`brownfield`), flutter-data |
 | `milestone` / `uncommitted` / `last` / `gate` | Verification scopes | flutter-verify |
@@ -248,7 +251,7 @@ All skills use the same verbs where applicable, so muscle memory stays portable.
 | `run` / `run-all` | Execute (tests / concept prompts) | flutter-test, flutter-concept-run |
 | `list` | Enumerate available items | flutter-concept-run |
 | `task` | Execute a single task by id | flutter-implementation |
-| `update` | Rules-aware merge of existing-but-differing files (never wholesale replace) | flutter-deploy |
+| `update` | Rules-aware merge of existing-but-differing files (never wholesale replace). The deploy skills also accept `--update` as an alias | flutter-deploy-basic, flutter-deploy-files, flutter-deploy-repo |
 | `- <free-text>` | Free-text routing: parse → classify → Confirm gate → execute | flutter-director |
 | `- <free-text> -y` | Trust-mode: skip the Confirm gate | flutter-director |
 | `- <free-text> --dry-run` | Render the routing plan, write nothing, stop | flutter-director |

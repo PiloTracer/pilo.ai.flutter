@@ -68,7 +68,7 @@ Observable items only. Anything you cannot point at is not a checklist item.
 
 ## Ending a session
 
-- [ ] `@flutter-session close`
+- [ ] `@flutter-session close` (add `commit` / `push` to also commit/push the `.work.flutter/` state)
 - [ ] HANDOFF entry appended
 - [ ] NEXT has exactly one active pointer
 - [ ] Blockers recorded with what is needed and from whom

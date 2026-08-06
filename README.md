@@ -55,7 +55,7 @@ The framework is a set of **markdown protocols** any LLM can follow, plus **shel
 
 **Repair** — `flutter-repair` (code) · `flutter-doctor` (toolchain)
 
-**Support** — `flutter-session` · `flutter-concept-run` · `flutter-docs` · `flutter-deploy`
+**Support** — `flutter-session` · `flutter-concept-run` · `flutter-docs` · `flutter-deploy-basic` (thin) · `flutter-deploy-files` (fat) · `flutter-deploy-repo` (pinned)
 
 Full registry with roles: [`skills/README.md`](skills/README.md). Gates and prerequisites: [`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDENCIES.md).
 

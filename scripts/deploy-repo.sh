@@ -36,7 +36,7 @@ TARGET="$(cd "$TARGET" && pwd)"
 [ "$TARGET" = "$FRAMEWORK_ROOT" ] && { echo "error: refusing to install into the framework itself" >&2; exit 1; }
 
 DEST="${TARGET}/${INTO}"
-[ -e "$DEST" ] && { echo "already present: ${DEST}"; echo "Run @flutter-deploy update - ${TARGET}"; exit 2; }
+[ -e "$DEST" ] && { echo "already present: ${DEST}"; echo "Run @flutter-deploy-repo update - ${TARGET} (or --update)"; exit 2; }
 
 command -v git >/dev/null 2>&1 || { echo "error: git is required for a repo install" >&2; exit 1; }
 

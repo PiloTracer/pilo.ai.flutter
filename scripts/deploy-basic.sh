@@ -36,7 +36,7 @@ if [ -f "$POINTER" ]; then
   echo "already installed: $POINTER"
   grep -E '^\*\*(Version|Mode|Source):' "$POINTER" || true
   echo
-  echo "This is an update. Run @flutter-deploy update - ${TARGET}"
+  echo "This is an update. Run @flutter-deploy-basic update - ${TARGET} (or --update)"
   exit 2
 fi
 
@@ -109,7 +109,7 @@ cat <<EOF
 
 deploy-basic: installed
 
-Verify: @flutter-deploy verify - ${TARGET}
+Verify: @flutter-deploy-basic verify - ${TARGET}
 Next:   @flutter-bootstrap init   (install is not setup — the project memory
         scaffold is a separate, required step)
 EOF

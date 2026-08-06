@@ -34,10 +34,10 @@ Full signal lists. Match on **intent**; the phrases are examples, not a keyword 
 | `repair` | "fix what the audit found" · "tests are red" · "make it pass" | `@flutter-repair repair - from <source>` | re-verify (automatic) |
 | `doctor` | "gradle build failed" · "pod install error" · "version solving failed" · "build_runner conflict" · "won't run on my machine" | `@flutter-doctor diagnose` | targeted mode |
 | `release` | "ship to TestFlight" · "build an app bundle" · "signing config" · "release checklist" · "store listing" | `@flutter-release <mode>` | `certify` → `build` |
-| `session` | "start work" · "wrap up" · "commit this" · "what was I doing" | `@flutter-session <mode>` | — |
+| `session` | "start work" · "wrap up" · "commit this" · "push the session state" · "what was I doing" | `@flutter-session <mode>` | — |
 | `concept` | "run the architecture check" · "FLS-06" · "concept prompts" | `@flutter-concept-run <mode>` | attach output |
 | `docs` | "write a guide" · "tutorial for onboarding" · "document the API surface" | `@flutter-docs create <kind> - <slug>` | — |
-| `deploy` | "install this framework in my other repo" | `@flutter-deploy <mode> - <path>` | — |
+| `deploy` | "install this framework in my other repo" | thin → `@flutter-deploy-basic - <path>`; fat → `@flutter-deploy-files - <path>`; pinned → `@flutter-deploy-repo - <path>` | — |
 | `router` | "how do I…" · "where does X live" · "which skill for Y" | `@flutter-router - <question>` | — |
 | `not-flutter` | "design the REST API" · "Postgres schema" · "Kubernetes" · "pick brand colors" · "design the dashboard layout" | preflight → `@ai-director` / `@ui-director` | — |
 | `cross-framework` | "build the app and the backend for it" · "design and implement the checkout screen" | preflight → `@x-director` | — |
@@ -70,7 +70,7 @@ Full signal lists. Match on **intent**; the phrases are examples, not a keyword 
 | "Add a staging environment" | `@flutter-scaffold flavor - staging` → `@flutter-release prepare` |
 | "Set up CI" | `@flutter-scaffold ci` → `@flutter-verify gate` locally to confirm the same commands pass |
 | "Where did we leave off?" | `@flutter-session context` |
-| "Wrap up for the day" | `@flutter-session close` (add `commit` to also commit) |
+| "Wrap up for the day" | `@flutter-session close` (add `commit` and/or `push` to also commit and/or push — e.g. `@flutter-session close commit push`) |
 | "Audit everything" | `@flutter-plan-verify foundation` → `master` → `alignment` → `coverage` → `@flutter-verify milestone` → `@flutter-a11y audit` → `@flutter-security audit` → `@flutter-perf audit` |
 | "Build the app and its backend" | preflight → `@x-director - <request>` |
 | "Design and build the settings screen" | preflight → `@x-director - <request>` (UI Design OS owns the screen SPEC; this framework implements it) |

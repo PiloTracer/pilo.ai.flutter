@@ -2,11 +2,16 @@
 
 All notable changes to Flutter Agent OS. Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning is [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-`@flutter-deploy update` reads this file to classify what changed between an installed version and the current one, so entries need to be accurate about scope.
+The deploy skills (`@flutter-deploy-basic`, `@flutter-deploy-files`, `@flutter-deploy-repo`) read this file in their `update` mode (also spelled `--update`) to classify what changed between an installed version and the current one, so entries need to be accurate about scope.
 
 ---
 
 ## [Unreleased]
+
+### Breaking — deploy skills split by install mode; session git scoped to `.work.flutter/` (2026-08-03)
+
+- **`flutter-deploy` is split into three mode-owned skills:** `flutter-deploy-basic` (thin pointer install), `flutter-deploy-files` (fat self-contained copy), `flutter-deploy-repo` (pinned clone/archive/submodule). Each keeps the lifecycle modes for its own install type: `verify`, `uninstall`, `status`, and `update` — which **also accepts `--update`** as an identical alias, so `@flutter-deploy-basic update - <target>` and `@flutter-deploy-basic --update - <target>` both work. The old `flutter-deploy` skill id no longer resolves (it is split into the three above); targets with a `Mode: basic` pointer migrate to `@flutter-deploy-basic update`, `Mode: files` to `@flutter-deploy-files update`, `Mode: repo` to `@flutter-deploy-repo update`. The `deploy-basic.sh` / `deploy-files.sh` / `deploy-repo.sh` scripts are unchanged in name and now print the matching new skill in their update and verify messages.
+- **`flutter-session` git is scoped to the working directory.** `commit` stages and commits only `.work.flutter/` paths — never app code or files outside the project memory tree; `push` sends the current branch (which may already carry app-code commits from other actors) without `--force`. `close`, `commit` and `push` combine in any order (execution is always close → commit → push), and `commit` includes new untracked files/dirs under `.work.flutter/` (gitignored scratch such as `.work.flutter/analysis/tmp/` stays ignored). `push` commits pending `.work.flutter/` state first when needed, never force-pushes, and reports when no remote exists.
 
 ### Added — UI craft: teach it, wire it, enforce it (2026-08-02)
 

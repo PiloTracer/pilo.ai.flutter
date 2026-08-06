@@ -9,7 +9,7 @@ Authoritative routing table for [`skill.md`](skill.md). When a skill or standard
 | Bucket | Example questions | Run next | Canonical sources |
 |--------|-------------------|----------|-------------------|
 | `orientation` | "where do I start?" · "what is this framework?" · "what should I do now?" | `@flutter-director status` | `START_HERE.md` · `README.md` |
-| `install` | "how do I add this to my repo?" · "thin vs fat install?" | `@flutter-deploy basic - <path>` | `skills/flutter-deploy/skill.md` · `docs/adoption/INSTALL.md` |
+| `install` | "how do I add this to my repo?" · "thin vs fat vs pinned install?" | thin → `@flutter-deploy-basic - <path>`; fat → `@flutter-deploy-files - <path>`; pinned → `@flutter-deploy-repo - <path>` | `skills/flutter-deploy-basic/skill.md` · `skills/flutter-deploy-files/skill.md` · `skills/flutter-deploy-repo/skill.md` |
 | `bootstrap` | "how do I set up `.work.flutter/`?" · "what does init create?" | `@flutter-bootstrap init` | `skills/flutter-bootstrap/skill.md` · `templates/bootstrap.sh` |
 | `stack-choice` | "Riverpod or Bloc?" · "which router?" · "how do I pick packages?" · "can I change the stack later?" | `@flutter-stack probe` then `set` | `stacks/README.md` · `standards/20260801-STATE_MANAGEMENT_STANDARD.md` |
 | `packages` | "is package X allowed?" · "what's the license policy?" · "recommended JSON library?" | `@flutter-router - <specific package>` | `resources/packages-2026.md` · `standards/20260801-PACKAGE_LICENSE_STANDARD.md` |
@@ -40,7 +40,7 @@ Authoritative routing table for [`skill.md`](skill.md). When a skill or standard
 | `repair` | "the audit found things, now what?" · "tests are red" · "how do I fix findings properly?" | `@flutter-repair repair - from <source>` | `skills/flutter-repair/skill.md` |
 | `doctor` | "gradle error" · "pod install fails" · "pub version solving failed" · "build_runner conflict" · "it won't build" | `@flutter-doctor diagnose` | `skills/flutter-doctor/skill.md` · `resources/flutter-cli.md` |
 | `release` | "how do I build a release?" · "signing?" · "flavors?" · "store checklist?" · "CI/CD?" | `@flutter-release status` | `standards/20260801-RELEASE_STANDARD.md` |
-| `session` | "how do I start/close a session?" · "who commits?" · "where was I?" | `@flutter-session context` | `skills/flutter-session/skill.md` |
+| `session` | "how do I start/close a session?" · "who commits?" · "how do I commit or push session state?" · "where was I?" | `@flutter-session context` | `skills/flutter-session/skill.md` |
 | `concepts` | "what is FLS-06?" · "when do concept prompts run?" · "which concepts apply to my diff?" | `@flutter-concept-run list` | `concepts/README.md` |
 | `docs` | "where do guides live?" · "how do I document a feature?" | `@flutter-docs create guide - <slug>` | `skills/flutter-docs/skill.md` |
 | `gates` | "why am I blocked?" · "what unlocks implementation-ready?" · "what does the blocked report mean?" | `@flutter-director status` | `skills/SKILL_DEPENDENCIES.md` |

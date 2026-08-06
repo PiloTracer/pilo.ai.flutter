@@ -54,7 +54,7 @@ Setup and planning: `@flutter-bootstrap` `@flutter-stack` `@flutter-foundation` 
 Implementation: `@flutter-scaffold` `@flutter-implementation` `@flutter-data` `@flutter-platform` `@flutter-release`
 Verification: `@flutter-test` `@flutter-verify` `@flutter-perf` `@flutter-a11y` `@flutter-security`
 Repair: `@flutter-repair` `@flutter-doctor`
-Support: `@flutter-session` `@flutter-concept-run` `@flutter-docs` `@flutter-deploy`
+Support: `@flutter-session` `@flutter-concept-run` `@flutter-docs` `@flutter-deploy-basic` `@flutter-deploy-files` `@flutter-deploy-repo`
 
 Registry and gates: `REPLACE:FLUTTER_FRAMEWORK_PATH/skills/SKILL_DEPENDENCIES.md`
 

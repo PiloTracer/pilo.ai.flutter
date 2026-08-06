@@ -10,7 +10,7 @@ All are POSIX-ish bash with no dependencies beyond coreutils and git. Nothing he
 
 | Script | Checks | Run by |
 |--------|--------|--------|
-| [`framework-verify.sh`](framework-verify.sh) | The framework itself: registration, frontmatter, context budgets, internal links, `@skill` route resolution, FLS registration, path discipline | `CONTRIBUTING`, `@flutter-deploy verify` |
+| [`framework-verify.sh`](framework-verify.sh) | The framework itself: registration, frontmatter, context budgets, internal links, `@skill` route resolution, FLS registration, path discipline | `CONTRIBUTING`, `@flutter-deploy-basic verify` / `@flutter-deploy-files verify` / `@flutter-deploy-repo verify` |
 | [`master-plan-verify.sh`](master-plan-verify.sh) | The 21 plan sections, front matter, id conventions, placeholder residue | `@flutter-plan-verify master` |
 | [`traceability-verify.sh`](traceability-verify.sh) | FR/NFR ↔ task coverage in **both** directions | `@flutter-plan-verify master` |
 | [`readiness-verify.sh`](readiness-verify.sh) | Probe ledger honesty: unsupported confirmations, coverage arithmetic | `@flutter-foundation certify` |
@@ -37,9 +37,9 @@ Adding a scan or a rule means adding a fixture line that triggers it and an asse
 | Script | Purpose |
 |--------|---------|
 | [`install-git-hooks.sh`](install-git-hooks.sh) | Installs the hooks; preserves and chains existing ones as `<hook>.local` |
-| [`deploy-basic.sh`](deploy-basic.sh) | Thin install — pointer + `.cursorrules` registration |
-| [`deploy-files.sh`](deploy-files.sh) | Fat install — self-contained copy |
-| [`deploy-repo.sh`](deploy-repo.sh) | Pinned clone or submodule |
+| [`deploy-basic.sh`](deploy-basic.sh) | Thin install — pointer + `.cursorrules` registration (skill: `@flutter-deploy-basic`) |
+| [`deploy-files.sh`](deploy-files.sh) | Fat install — self-contained copy (skill: `@flutter-deploy-files`) |
+| [`deploy-repo.sh`](deploy-repo.sh) | Pinned clone or submodule (skill: `@flutter-deploy-repo`) |
 
 Project scaffolding is [`templates/bootstrap.sh`](../templates/bootstrap.sh) — installing the framework and setting up a project are different steps, and both are required.
 

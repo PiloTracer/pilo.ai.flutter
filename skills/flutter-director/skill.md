@@ -165,10 +165,10 @@ Classify into one bucket. Match by intent. Full signal lists and worked examples
 | `repair` | "fix the findings", "tests are failing", "remediate", "the audit found…" | `@flutter-repair repair - from <source>` |
 | `doctor` | build error, Gradle/CocoaPods failure, "pub get fails", "flutter doctor", codegen error, "it won't run" | `@flutter-doctor diagnose` |
 | `release` | "ship it", "build the app bundle", "signing", "store", "release checklist" | `@flutter-release` |
-| `session` | "start session", "close session", "commit", "where was I?" | `@flutter-session` |
+| `session` | "start session", "close session", "commit", "push", "where was I?" | `@flutter-session` |
 | `concept` | "run FLS-06", "architecture check", "concept prompt" | `@flutter-concept-run` |
 | `docs` | "document", "write a guide", "tutorial", "reference doc" | `@flutter-docs` |
-| `deploy` | "install this framework into my repo", "copy the framework" | `@flutter-deploy` |
+| `deploy` | "install this framework into my repo", "copy the framework" | thin → `@flutter-deploy-basic`; fat → `@flutter-deploy-files`; pinned → `@flutter-deploy-repo` |
 | `router` | "how do I…?", "where is…?", "which skill…?" | `@flutter-router - <question>` |
 | `not-flutter` | Backend, API, DB, infra → `.ai`. Design tokens, visual craft → `.ai.ui` | Preflight, then `@ai-director` / `@ui-director` |
 | `cross-framework` | Spans Flutter + backend and/or design ("app plus the API behind it") | Preflight, then `@x-director` |

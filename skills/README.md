@@ -79,10 +79,17 @@ Use for **new** skills and for any **rename** (update `.cursorrules`, this READM
 
 | Skill id | Folder | Role |
 |----------|--------|------|
-| flutter-session | `flutter-session/` | Session open/close, HANDOFF and NEXT maintenance, read-only `context` load, optional git |
+| flutter-session | `flutter-session/` | Session open/close, HANDOFF and NEXT maintenance, read-only `context` load; git `commit` / `push` scoped to `.work.flutter/` |
 | flutter-concept-run | `flutter-concept-run/` | Run FLS-01…FLS-13 concept prompts; attach output to the iteration, SPEC or PR |
 | flutter-docs | `flutter-docs/` | Create guides, tutorials and reference docs under `.work.flutter/docs/` |
-| flutter-deploy | `flutter-deploy/` | Install this framework into another repository: `basic` (thin), `files` (fat), `repo` (clone/archive), `update` |
+
+### Deploy
+
+| Skill id | Folder | Role |
+|----------|--------|------|
+| flutter-deploy-basic | `flutter-deploy-basic/` | Install the framework into another repository, **thin** (`basic`): pointer + `.cursorrules` registration; `update` / `--update`, `verify`, `uninstall`, `status` |
+| flutter-deploy-files | `flutter-deploy-files/` | Install the framework into another repository, **fat** (`files`): self-contained copy; `update` / `--update`, `verify`, `uninstall`, `status` |
+| flutter-deploy-repo | `flutter-deploy-repo/` | Install the framework into another repository, **pinned** (`repo`): clone/archive/submodule; `update` / `--update`, `verify`, `uninstall`, `status` |
 
 **Typical flow (greenfield):** `@flutter-bootstrap init` → `@flutter-stack set` → `@flutter-foundation greenfield` → `certify` → `@flutter-plan-master greenfield` → `@flutter-plan-master status` (implementation-ready) → `@flutter-scaffold app` → `@flutter-implementation plan - F1` → `start` / `continue` / `complete` → `@flutter-release certify`.
 

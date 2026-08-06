@@ -1,17 +1,20 @@
 ---
-name: flutter-deploy
+name: flutter-deploy-files
 description: >-
   Install, update and verify the Flutter Agent OS framework itself inside a
-  target repository - thin pointer install, full file copy, clone or archive,
-  and version updates that preserve local project artifacts. Distinct from
-  flutter-release, which ships the app; this ships the framework. Use for
-  install the framework, add Flutter Agent OS to this repo, or update the
-  framework.
+  target repository using the fat (files) install: a self-contained copy of the
+  framework under .ai.flutter/ so it works without the source location. Accepts
+  the mode "update" or the alias "--update" for version updates that preserve
+  local project artifacts. Distinct from flutter-release, which ships the app;
+  this ships the framework. Use for install the framework, add Flutter Agent OS
+  to this repo, or update the framework.
 ---
 
-# flutter-deploy
+# flutter-deploy-files
 
-Installs **the framework**, not the app. `@flutter-release` ships your Flutter application; `@flutter-deploy` puts this Agent OS into a repository so the other skills can run there.
+Installs **the framework**, not the app. `@flutter-release` ships your Flutter application; `@flutter-deploy-files` puts this Agent OS into a repository so the other skills can run there. This skill owns the **files (fat)** install only: a self-contained copy of the framework under `<target>/.ai.flutter/`, independent of where the source lives.
+
+**Sibling skills:** thin installs are `@flutter-deploy-basic`; version-pinned clone or submodule installs are `@flutter-deploy-repo`. Pick the mode first, then the skill that owns it.
 
 **Never gated.** Installation is the step that creates the state everything else requires.
 
@@ -35,50 +38,20 @@ Installs **the framework**, not the app. `@flutter-release` ships your Flutter a
 
 | Mode | Action |
 |------|--------|
-| `basic - <target>` | **Thin install (default).** A pointer file plus `.cursorrules` registration; skills are read from the source location |
-| `files - <target>` | **Fat install.** Copy the full framework into the target so it is self-contained |
-| `repo - <target>` | Clone or unpack the framework as a directory inside the target |
-| `update - <target>` | Update an existing install, preserving all project artifacts |
-| `verify - <target>` | Read-only: is the install complete, consistent and usable |
-| `uninstall - <target>` | Remove framework files; **never** removes project artifacts |
+| `files - <target>` | **Fat install (default).** Copy the full framework into the target so it is self-contained |
+| `update - <target>` | Update an existing files install, preserving all project artifacts. `--update` is accepted as an alias — `@flutter-deploy-files update - <target>` and `@flutter-deploy-files --update - <target>` are identical |
+| `verify - <target>` | Read-only: is the files install complete, consistent and usable |
+| `uninstall - <target>` | Remove the copied framework directory; **never** removes project artifacts |
 | `status` | Read-only: installed mode, version, drift |
 
-### Choosing a mode
+### Choosing the files mode
 
 | Situation | Mode | Why |
 |-----------|------|-----|
-| Framework lives beside the repo on this machine; one developer or a shared checkout | `basic` | No duplication; updates are instant |
 | CI, containers, or contributors who will not have the source | `files` | Self-contained and reproducible |
-| The target wants the framework pinned in its own history | `repo` | Version-pinned, reviewable |
+| Framework lives beside the repo on this machine; one developer or a shared checkout | `basic` → `@flutter-deploy-basic` | No duplication; updates are instant |
+| The target wants the framework pinned in its own history | `repo` → `@flutter-deploy-repo` | Version-pinned, reviewable |
 | Already installed | `update` | Preserves project artifacts |
-
----
-
-## basic protocol
-
-1. **Resolve** the target repo root (must contain `.git` or be explicitly confirmed) and the absolute framework source path. An empty directory with no `.git` is not yet a repo — run `git init -b main` in the target (operator-confirmed) before writing the pointer, or stop and ask. Do not invent a remote.
-2. **Detect an existing install** — a pointer file, a framework directory, or `.cursorrules` registration. Found → stop and route to `update`.
-3. **Write the pointer** `FLUTTER_AGENT_OS.md` at the target root:
-
-```markdown
-# Flutter Agent OS — installed (basic)
-
-**Source:** <absolute path>
-**Version:** <version>
-**Installed:** <YYYY-MM-DD>
-**Mode:** basic (thin — skills read from source)
-
-Entry point: `<source>/START_HERE.md`
-Skills: `<source>/skills/`
-Project work tree: `.work.flutter/` (this repo — created by `@flutter-bootstrap init`)
-
-Run `@flutter-bootstrap init` next.
-```
-
-4. **Register in `.cursorrules`** — append a Flutter Agent OS section. If the file exists, **merge**: read it, confirm no conflicting skill ids or contradictory rules, append only the new section, and report exactly what was added. Other frameworks' sections are left untouched.
-5. **Verify** (see below) and report.
-
-Note the tradeoff in the report: a thin install breaks if the source path moves, and does not travel with a clone. If either matters, `files` is the right mode.
 
 ---
 
@@ -96,13 +69,13 @@ Then write the pointer with `Mode: files`, register in `.cursorrules`, ensure sc
 
 ---
 
-## update protocol
+## update protocol (mode `update` / alias `--update`)
 
-The mode with the highest risk of destroying work, so it is the most constrained.
+The mode with the highest risk of destroying work, so it is the most constrained. Both spellings are accepted; `--update` is a synonym, not a different mode.
 
 ### U1 — Establish both versions
 
-Read the installed pointer for mode and version; read the source version. Same version → report "already current" and stop unless drift is found.
+Read the installed pointer for mode and version; read the source version. Same version → report "already current" and stop unless drift is found. A pointer whose `Mode:` is not `files` → stop: the target was installed by `@flutter-deploy-basic` or `@flutter-deploy-repo`, and updating it here would apply the wrong protocol.
 
 ### U2 — Classify every path
 
@@ -115,16 +88,16 @@ Read the installed pointer for mode and version; read the source version. Same v
 
 ### U3 — Detect local modification
 
-Compare installed framework files against the source's corresponding version. Any file that differs from both the old and the new source version was locally modified. List each one and ask before replacing; offer to preserve it as `<file>.local` alongside the update.
+Compare installed framework files (under `<target>/.ai.flutter/`) against the source's corresponding version. Any file that differs from both the old and the new source version was locally modified. List each one and ask before replacing; offer to preserve it as `<file>.local` alongside the update.
 
 ### U4 — Apply, then verify
 
-Replace framework files, merge merged files, run `verify`, and report a changelog:
+Replace framework files, merge merged files, update the pointer's `Version:` and `Installed:` lines, run `verify`, and report a changelog:
 
 ```markdown
-## @flutter-deploy update
+## @flutter-deploy-files update
 
-**Version:** <old> → <new> · **Mode:** <mode>
+**Version:** <old> → <new> · **Mode:** files
 
 | Change | Count | Detail |
 |--------|-------|--------|
@@ -148,18 +121,26 @@ Renamed skills or changed verbs are breaking and must be called out explicitly, 
 
 | # | Check | Fails when |
 |---|-------|-----------|
-| 1 | Pointer file exists and is readable | missing |
-| 2 | Source path (basic) resolves | dangling |
-| 3 | Every skill in `skills/README.md` has a `skill.md` | any missing |
+| 1 | `<target>/.ai.flutter/` exists with `skills/`, `standards/`, `scripts/`, `concepts/`, `templates/` | any missing |
+| 2 | Every skill in `<target>/.ai.flutter/skills/README.md` has a `skill.md` | any missing |
+| 3 | Scripts under the copy are executable | not `+x` |
 | 4 | `.cursorrules` registers the framework | missing section |
-| 5 | Scripts are executable | not `+x` |
-| 6 | No skill id collides with another installed framework | collision |
-| 7 | Version recorded and matches the source | mismatch |
-| 8 | Project artifacts intact (update only) | any modified |
-| 9 | `scripts/framework-verify.sh` passes | non-zero exit |
-| 10 | Target `.gitignore` excludes framework scratch paths | not excluded |
+| 5 | No skill id collides with another installed framework | collision |
+| 6 | Version recorded in the pointer and matches the source | mismatch |
+| 7 | `scripts/framework-verify.sh` passes **inside the copy** | non-zero exit |
+| 8 | Target `.gitignore` excludes framework scratch paths | not excluded |
+| 9 | `.work.flutter/` intact (update only) | any modified |
 
 Report per check with the evidence, then a single verdict. Failures name the fix command.
+
+---
+
+## uninstall protocol
+
+1. Confirm the pointer's `Mode:` is `files` — never uninstall another mode's install from this skill.
+2. Remove the copied framework directory `<target>/.ai.flutter/` and the pointer file.
+3. Remove only the Flutter Agent OS section from `.cursorrules` (between the `FLUTTER_AGENT_OS_BEGIN` / `FLUTTER_AGENT_OS_END` markers); leave every other framework's section untouched.
+4. Report what was removed. **Never** delete `.work.flutter/`, project standards, SPECs, plans or any app code — an uninstall removes the framework copy, not the project's memory.
 
 ---
 
@@ -183,8 +164,8 @@ If a collision is detected anyway, **stop**. Do not rename another framework's s
 - Replacing a locally modified skill without asking.
 - Installing over an existing install instead of updating.
 - Copying the framework's `.git` into the target.
+- Running the `basic` or `repo` update protocol against a `files` pointer (or vice versa).
 - Reporting success without running `verify`.
-- A thin install where the source path is temporary or user-specific, without saying so.
 - Renaming another framework's skills to resolve a collision.
 - Silent breaking changes to skill names or verbs.
 - Installing without stating the license.
@@ -199,12 +180,12 @@ If a collision is detected anyway, **stop**. Do not rename another framework's s
 | 1 | Target root resolved and confirmed | pass/fail | path |
 | 2 | Existing install detected before writing | pass/fail | |
 | 3 | Mode chosen deliberately; tradeoff stated | pass/fail | |
-| 4 | `.cursorrules` merged, not overwritten | pass/fail | diff |
-| 5 | No project artifact modified | pass/fail | git status |
-| 6 | Locally modified framework files surfaced, not discarded | pass/skip | list |
-| 7 | Collisions with other frameworks checked | pass/fail | |
+| 4 | Collisions reported file by file before copying | pass/fail | list |
+| 5 | `.cursorrules` merged, not overwritten | pass/fail | diff |
+| 6 | No project artifact modified | pass/fail | git status |
+| 7 | Locally modified framework files surfaced, not discarded | pass/skip | list |
 | 8 | Version and mode recorded in the pointer | pass/fail | |
-| 9 | `verify` run; all 10 checks reported | pass/fail | verdict |
+| 9 | `verify` run inside the copy; all checks reported | pass/fail | verdict |
 | 10 | Breaking changes called out with migrations | pass/skip | |
 | 11 | License position stated | pass/fail | |
 | 12 | Next step (`@flutter-bootstrap init`) given | pass/fail | |

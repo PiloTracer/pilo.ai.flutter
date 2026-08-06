@@ -5,7 +5,7 @@
 # exists, every skill is registered, frontmatter is valid, context budgets hold,
 # internal links resolve, and the required tree is present.
 #
-# Run before every framework change lands, and by @flutter-deploy verify.
+# Run before every framework change lands, and by the @flutter-deploy-* verify modes.
 #
 # Usage: framework-verify.sh [--root <path>] [--quiet]
 # Exit: 0 pass · 1 fail

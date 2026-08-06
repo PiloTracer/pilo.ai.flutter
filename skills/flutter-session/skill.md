@@ -4,8 +4,10 @@ description: >-
   Open and close Flutter Agent OS work sessions and maintain cross-session
   memory. Loads project context in the correct order, produces an accurate
   state snapshot, and writes the HANDOFF entry and NEXT_FLUTTER.md pointer that
-  let the next session resume without re-deriving anything. Use for start
-  session, where was I, what is the state, wrap up, or hand off.
+  let the next session resume without re-deriving anything. Optional git:
+  commit and push are scoped to the .work.flutter/ working directory only, and
+  close, commit and push combine in any order. Use for start session, where was
+  I, what is the state, wrap up, commit session state, or hand off.
 ---
 
 # flutter-session
@@ -25,7 +27,7 @@ Every session ends. The only question is whether the next one starts from a writ
 3. **`context` is read-only.** Loading context never writes, never fixes, never certifies.
 4. **A close without a HANDOFF entry is not a close.** The entry is the deliverable.
 5. **NEXT_FLUTTER.md carries exactly one active pointer.** Two "next" instructions means the next session picks wrong.
-6. **Never commit or push unless explicitly asked.** Git is opt-in, always.
+6. **Git is opt-in and scoped to `{FLUTTER_WORK_ROOT}`.** Never commit or push unless explicitly asked. When asked, `commit` stages only `.work.flutter/` paths — never app code, never anything outside the working directory — and `push` sends the current branch without `--force`. `commit` includes new untracked files/dirs under `.work.flutter/` that belong to project memory.
 7. **Record blockers as blockers.** An unresolved problem that is not written down will be rediscovered at cost.
 
 ---
@@ -37,10 +39,14 @@ Every session ends. The only question is whether the next one starts from a writ
 | `status` | Read-only state snapshot. **Default** |
 | `context` | Load project memory in the correct order for a fresh agent. Read-only |
 | `open` | `context` + orient toward the next action + note session start |
-| `close` | Write the HANDOFF entry, update `NEXT_FLUTTER.md`, list blockers |
+| `close` | Write the HANDOFF entry, update `NEXT_FLUTTER.md`, list blockers. May combine with `commit` / `push` |
 | `handoff` | Write a HANDOFF entry only |
 | `next - <instruction>` | Set the single active pointer in `NEXT_FLUTTER.md` |
 | `blockers` | List open blockers across the work tree |
+| `commit` | Git commit of `{FLUTTER_WORK_ROOT}` changes only, including new untracked files/dirs. Does not close the session |
+| `push` | Commit pending `{FLUTTER_WORK_ROOT}` changes (if any), then `git push`. Does not close the session |
+
+`close`, `commit` and `push` combine in any order (`@flutter-session close commit`, `@flutter-session close push`, `@flutter-session commit push`, `@flutter-session close commit push`, …). Execution order is always **close → commit → push**; duplicates and other orders are normalized to that and the normalization is stated in the report.
 
 ---
 
@@ -161,8 +167,59 @@ One active pointer. If an iteration block is active, leave the block alone (it b
 **Recorded:** HANDOFF entry <date> — <title>
 **Next pointer:** `<command>`
 **Blockers carried:** <n> — <one line each>
-**Uncommitted:** <n> files (not committed — no request to commit)
+**Uncommitted:** <n> files — committed only if `commit`/`push` was requested (see Git block)
 **Verification at close:** <results or "none run this session">
+```
+
+When `commit` and/or `push` were requested, the C4 report appends the git result block from § git protocol.
+
+---
+
+## git protocol (commit / push / close combinations)
+
+Commits are scoped to `{FLUTTER_WORK_ROOT}` = `.work.flutter/` in the **target repo/directory**: only `.work.flutter/` paths are ever staged or committed. `push` then sends the current branch to the remote — the branch may already carry app-code commits made by other actors; this skill never creates them and never force-pushes.
+
+### Scope guard
+
+1. `{FLUTTER_WORK_ROOT}` must exist; a missing `.work.flutter/` means the repo is not bootstrapped — report "not bootstrapped" and stop. There is nothing to commit or push.
+2. Stage with a path restriction: `git add -A -- .work.flutter/`. This stages new, modified and deleted files/dirs under the working directory, and respects `.gitignore` — scratch such as `.work.flutter/analysis/tmp/` and `.work.flutter/commit-ref-pending/` stays ignored.
+3. Verify the staged set before committing: `git diff --cached --name-only` must contain **only** `.work.flutter/` paths. Anything else staged (or any untracked file outside `.work.flutter/`, e.g. at the repo root) is reported as left untouched and never committed.
+4. Commit with the path restriction too: `git commit -m <subject> -- .work.flutter/`, so unrelated staged content cannot ride along. Never `--amend`, never a bare `git add -A` or `git add .`.
+5. Report precisely: what was staged, what was committed, what was left untouched, and why.
+
+### Parameter combinations
+
+| Invocation | What runs |
+|------------|-----------|
+| `@flutter-session close` | Close protocol only (HANDOFF + NEXT). No git |
+| `@flutter-session commit` | Git commit of `.work.flutter/` only. No close |
+| `@flutter-session push` | Commit pending `.work.flutter/` changes (if any), then `git push`. No close |
+| `@flutter-session close commit` | Close, then commit |
+| `@flutter-session close push` | Close, then commit (if pending), then push |
+| `@flutter-session commit push` | Commit, then push. No close |
+| `@flutter-session close commit push` | All three, in order |
+| any other order or duplicates | Normalize to close → commit → push; say so in the report |
+
+### commit rules
+
+1. Subject follows the repo's commit conventions (`type: description`, ≤72 chars). No AI attribution, no tool co-author trailers.
+2. **Untracked files/dirs under `.work.flutter/` that belong to project memory are included** — HANDOFF, NEXT, plans, decisions, docs, SPECs, STACK.md, and anything else the work tree holds. That is the point of the working-directory scope.
+3. Nothing to commit → report "nothing to commit" as the outcome, not as an error.
+4. Never commit files outside `.work.flutter/`, never amend, never force-push.
+
+### push rules
+
+1. Requires a configured remote (`git remote` non-empty); otherwise report "no remote configured" and stop without inventing one.
+2. Pushes the current branch only: `git push`. Never `--force`.
+3. If `.work.flutter/` has uncommitted changes, commit them first per the commit rules — a session push is a state persist, and uncommitted session memory would otherwise be left behind.
+4. Nothing to commit and nothing unpushed → report "nothing to push".
+5. A push that fails (rejected, network) is reported with the command output; the session close report still records the state.
+
+### git result block (append to any report that ran git)
+
+```markdown
+**Git:** committed <n> files under .work.flutter/ · <sha> · pushed <yes/no · branch>
+**Left untouched:** <paths outside .work.flutter/ that existed but were not staged>
 ```
 
 ---
@@ -188,6 +245,9 @@ Scan HANDOFF open items, `NEXT_FLUTTER.md` blocked tasks, SPEC front matter with
 - Leaving two competing next-actions in `NEXT_FLUTTER.md`.
 - Silently dropping a blocker that was not resolved.
 - Committing or pushing without being asked.
+- Running `git add -A` or `git add .` without a path restriction, or committing a staged set that includes paths outside `.work.flutter/`.
+- Omitting new untracked project-memory files/dirs under `.work.flutter/` from a `commit`.
+- Pushing without a remote, force-pushing, or amending a commit.
 - Editing the iteration block during a close.
 - Reporting "all good" when the working tree has uncommitted changes.
 
@@ -208,4 +268,6 @@ Scan HANDOFF open items, `NEXT_FLUTTER.md` blocked tasks, SPEC front matter with
 | 9 | Exactly one active pointer in NEXT | pass/skip | |
 | 10 | Blockers carried forward with owner and needed action | pass/skip | |
 | 11 | No commit or push without an explicit request | pass/fail | |
-| 12 | Next action is an exact runnable command | pass/fail | |
+| 12 | Commits staged only `.work.flutter/` paths; untracked project-memory files/dirs included | pass/skip | `git diff --cached --name-only` |
+| 13 | Push used the current branch and a configured remote; no `--force`, no amend | pass/skip | `git push` output |
+| 14 | Next action is an exact runnable command | pass/fail | |

@@ -233,7 +233,7 @@ Read-only. No writes. Report the milestone, the task matrix with statuses, `git 
 
 | Skill | Integration |
 |-------|-------------|
-| `flutter-session` | `start` before implementation; `close [commit]` after `complete` |
+| `flutter-session` | `start` before implementation; `close` after `complete` — add `commit` and/or `push` to also commit/push the `.work.flutter/` state (e.g. `close commit push`) |
 | `flutter-plan-master` | Milestone source; `revise` when the plan is wrong |
 | `flutter-scaffold` | Generates module skeletons so tasks start from the right shape |
 | `flutter-data` | **Mandatory** for models, repositories, sources and local-store migrations |
